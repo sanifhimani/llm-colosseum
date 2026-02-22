@@ -11,8 +11,8 @@ const SPAWNS = [
 ];
 
 export function createArtifacts() {
-  return SPAWNS.map((spawn, i) => ({
-    id: `artifact-${i}`,
+  return SPAWNS.map((spawn) => ({
+    id: `artifact-${spawn.type}`,
     ...ARTIFACT_TYPES[spawn.type],
     pos: spawn.pos,
     active: true,

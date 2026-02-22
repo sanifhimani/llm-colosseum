@@ -1,7 +1,8 @@
-import { useRef, useEffect, useState } from 'react';
+import { memo, useRef, useEffect } from 'react';
 import { drawAgentSprite } from '../utils/sprites';
+import { getHpColor } from '../utils/hp';
 
-function MiniSprite({ agentId, color, alive }) {
+const MiniSprite = memo(function MiniSprite({ agentId, color, alive }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -23,11 +24,11 @@ function MiniSprite({ agentId, color, alive }) {
       style={{ imageRendering: 'pixelated', flexShrink: 0 }}
     />
   );
-}
+});
 
 function HpBar({ hp, maxHp }) {
   const pct = hp / maxHp;
-  const color = pct > 0.6 ? 'var(--color-green)' : pct > 0.3 ? 'var(--color-gold)' : 'var(--color-red)';
+  const color = getHpColor(pct);
 
   return (
     <div className="fighter-hp-bar">
@@ -37,7 +38,7 @@ function HpBar({ hp, maxHp }) {
 }
 
 function TrustStars({ trust }) {
-  const filled = Math.round(Math.max(1, Math.min(5, trust)));
+  const filled = Math.round(Math.max(0, Math.min(5, trust / 20)));
   return (
     <span className="fighter-trust">
       {Array.from({ length: 5 }, (_, i) => (
@@ -67,9 +68,7 @@ function AllyTags({ alliances, agents }) {
   );
 }
 
-export default function FightersPanel({ agents }) {
-  const [selectedId, setSelectedId] = useState(null);
-
+export default memo(function FightersPanel({ agents }) {
   return (
     <div className="pbox" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
       <div className="panel-title">{'\u25B6'} FIGHTERS</div>
@@ -77,8 +76,7 @@ export default function FightersPanel({ agents }) {
         {agents.map((agent) => (
           <div
             key={agent.id}
-            className={`fighter-card${selectedId === agent.id ? ' selected' : ''}${!agent.alive ? ' dead' : ''}`}
-            onClick={() => setSelectedId(selectedId === agent.id ? null : agent.id)}
+            className={`fighter-card${!agent.alive ? ' dead' : ''}`}
           >
             <div className="fighter-header">
               <MiniSprite agentId={agent.id} color={agent.color} alive={agent.alive} />
@@ -97,4 +95,4 @@ export default function FightersPanel({ agents }) {
       </div>
     </div>
   );
-}
+});

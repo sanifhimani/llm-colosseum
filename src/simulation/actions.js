@@ -2,6 +2,7 @@ import { GRID_SIZE } from '../state/constants';
 
 const DIRECTIONS = { N: [-1, 0], S: [1, 0], E: [0, 1], W: [0, -1] };
 const DIR_KEYS = Object.keys(DIRECTIONS);
+const GRUDGE_SEP = '|';
 
 function rand(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -19,6 +20,15 @@ function dissolveAlliances(agents, deadId) {
   for (const agent of agents) {
     agent.alliances = agent.alliances.filter((id) => id !== deadId);
   }
+}
+
+function grudgeKey(from, to) {
+  return `${from}${GRUDGE_SEP}${to}`;
+}
+
+export function parseGrudgeKey(key) {
+  const [from, to] = key.split(GRUDGE_SEP);
+  return { from, to };
 }
 
 export function applyMove(agents, agentId, direction) {
@@ -66,12 +76,12 @@ export function applyAttack(agents, agentId, targetId, grudges) {
   }
 
   const newGrudges = { ...grudges };
+  const key = grudgeKey(agentId, targetId);
+  newGrudges[key] = (newGrudges[key] || 0) + 1;
 
   if (target.hp <= 0) {
     target.alive = false;
     dissolveAlliances(next, targetId);
-    const key = `${agentId}->${targetId}`;
-    newGrudges[key] = (newGrudges[key] || 0) + 1;
     return { agents: next, grudges: newGrudges, event: { type: 'kill', agent: agentId, target: targetId, damage } };
   }
 
@@ -122,7 +132,7 @@ export function applyBetray(agents, agentId, targetId, grudges) {
   agent.trust = Math.max(0, agent.trust - 20);
 
   const newGrudges = { ...grudges };
-  const key = `${agentId}->${targetId}`;
+  const key = grudgeKey(agentId, targetId);
   newGrudges[key] = (newGrudges[key] || 0) + 1;
 
   if (target.hp <= 0) {
@@ -150,12 +160,38 @@ export function applyUseArtifact(agents, agentId, artifacts) {
   return { agents: next, artifacts: newArtifacts, event: { type: 'artifact', agent: agentId, artifact: artifact.name } };
 }
 
+function moveToward(from, to) {
+  const dr = to[0] > from[0] ? 'S' : to[0] < from[0] ? 'N' : null;
+  const dc = to[1] > from[1] ? 'E' : to[1] < from[1] ? 'W' : null;
+  const dirs = [dr, dc].filter(Boolean);
+  return dirs.length > 0 ? dirs[rand(0, dirs.length - 1)] : DIR_KEYS[rand(0, 3)];
+}
+
+function nearestArtifact(agent, artifacts) {
+  let best = null;
+  let bestDist = Infinity;
+  for (const a of artifacts) {
+    if (!a.active) continue;
+    const dist = Math.abs(a.pos[0] - agent.pos[0]) + Math.abs(a.pos[1] - agent.pos[1]);
+    if (dist < bestDist) {
+      best = a;
+      bestDist = dist;
+    }
+  }
+  return { artifact: best, dist: bestDist };
+}
+
 export function pickRandomAction(agent, agents, artifacts) {
   const alive = agents.filter((a) => a.alive && a.id !== agent.id);
   if (alive.length === 0) return { type: 'MOVE', direction: DIR_KEYS[rand(0, 3)] };
 
   const onArtifact = artifacts.some((a) => a.active && a.pos[0] === agent.pos[0] && a.pos[1] === agent.pos[1]);
-  if (onArtifact && Math.random() < 0.8) return { type: 'USE_ARTIFACT' };
+  if (onArtifact) return { type: 'USE_ARTIFACT' };
+
+  const { artifact: closestArtifact, dist: artifactDist } = nearestArtifact(agent, artifacts);
+  if (closestArtifact && artifactDist <= 4 && Math.random() < 0.6) {
+    return { type: 'MOVE', direction: moveToward(agent.pos, closestArtifact.pos) };
+  }
 
   if (agent.alliances.length > 0 && Math.random() < 0.15) {
     return { type: 'BETRAY', target: agent.alliances[0] };
@@ -164,8 +200,11 @@ export function pickRandomAction(agent, agents, artifacts) {
   const proposer = alive.find((a) => a.pendingAlly === agent.id);
   if (proposer && Math.random() < 0.7) return { type: 'ALLY', target: proposer.id };
 
-  if (agent.alliances.length === 0 && alive.length > 1 && Math.random() < 0.2) {
-    return { type: 'ALLY', target: alive[rand(0, alive.length - 1)].id };
+  if (agent.alliances.length === 0 && Math.random() < 0.2) {
+    const unallied = alive.filter((a) => a.alliances.length === 0);
+    if (unallied.length > 0) {
+      return { type: 'ALLY', target: unallied[rand(0, unallied.length - 1)].id };
+    }
   }
 
   if (Math.random() < 0.45) {
@@ -180,10 +219,7 @@ export function pickRandomAction(agent, agents, artifacts) {
   }, { dist: Infinity });
 
   if (nearest.dist > 2) {
-    const dr = nearest.pos[0] > agent.pos[0] ? 'S' : nearest.pos[0] < agent.pos[0] ? 'N' : null;
-    const dc = nearest.pos[1] > agent.pos[1] ? 'E' : nearest.pos[1] < agent.pos[1] ? 'W' : null;
-    const dirs = [dr, dc].filter(Boolean);
-    if (dirs.length > 0) return { type: 'MOVE', direction: dirs[rand(0, dirs.length - 1)] };
+    return { type: 'MOVE', direction: moveToward(agent.pos, nearest.pos) };
   }
 
   return { type: 'MOVE', direction: DIR_KEYS[rand(0, 3)] };

@@ -2,6 +2,11 @@ import { useEffect } from 'react';
 import TitleBar from './components/TitleBar';
 import ArenaCanvas from './components/ArenaCanvas';
 import FightersPanel from './components/FightersPanel';
+import BattleLog from './components/BattleLog';
+import GrudgeMap from './components/GrudgeMap';
+import ZonePanel from './components/ZonePanel';
+import DialogueBox from './components/DialogueBox';
+import DamageFloat from './components/DamageFloat';
 import useGameState from './hooks/useGameState';
 import useSimulation from './hooks/useSimulation';
 
@@ -18,18 +23,17 @@ function App() {
       <div className="main-area">
         <FightersPanel agents={game.agents} />
 
-        <ArenaCanvas agents={game.agents} artifacts={game.artifacts} zoneRadius={game.zoneRadius} />
+        <div className="arena-col">
+          <ArenaCanvas agents={game.agents} artifacts={game.artifacts} zoneRadius={game.zoneRadius}>
+            <DamageFloat events={game.events} agents={game.agents} />
+          </ArenaCanvas>
+          <DialogueBox events={game.events} agents={game.agents} turn={game.turn} />
+        </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <div className="pbox" style={{ overflow: 'hidden' }}>
-            <div className="panel-title">{'\u25B6'} BATTLE LOG</div>
-          </div>
-          <div className="pbox" style={{ overflow: 'hidden' }}>
-            <div className="panel-title">{'\u25B6'} GRUDGE MAP</div>
-          </div>
-          <div className="pbox" style={{ overflow: 'hidden' }}>
-            <div className="panel-title">{'\u25B6'} ZONE / HAZARDS</div>
-          </div>
+        <div className="right-panels">
+          <ZonePanel zoneRadius={game.zoneRadius} turn={game.turn} artifacts={game.artifacts} />
+          <GrudgeMap grudges={game.grudges} />
+          <BattleLog events={game.events} />
         </div>
       </div>
     </div>

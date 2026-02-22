@@ -1,1 +1,205 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --color-void: #0b0c1a;
+  --color-panel: #0e1530;
+  --color-border: #3a6ea8;
+  --color-border2: #1a3a5c;
+  --color-gold: #f0c020;
+  --color-green: #38e858;
+  --color-red: #e83838;
+  --color-white: #e8e8f0;
+  --color-dim: #4a5070;
+  --color-arena-floor: #7a6040;
+  --color-arena-dark: #5a4830;
+  --color-arena-light: #9a8060;
+  --color-wall: #2a2a3a;
+  --font-pixel: 'Press Start 2P', monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  image-rendering: pixelated;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) var(--color-void);
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: var(--color-void);
+  color: var(--color-white);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  overflow: hidden;
+}
+
+#root { height: 100%; }
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px, transparent 3px,
+    rgba(0, 0, 20, 0.25) 3px, rgba(0, 0, 20, 0.25) 4px
+  );
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 120% 100% at 50% 50%,
+    transparent 60%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+}
+
+.pbox {
+  background: var(--color-panel);
+  border: 4px solid var(--color-border);
+  outline: 4px solid var(--color-border2);
+  outline-offset: -8px;
+  position: relative;
+}
+
+.pbox::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  outline: 2px solid var(--color-void);
+  outline-offset: 4px;
+  pointer-events: none;
+}
+
+.pbox-gold {
+  border-color: var(--color-gold);
+  outline-color: #805010;
+}
+
+.pbox-gold::before {
+  outline-color: var(--color-void);
+}
+
+.screen {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+}
+
+.titlebar {
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.title-logo {
+  font-size: clamp(10px, 2.5vw, 18px);
+  color: var(--color-gold);
+  text-shadow: 4px 4px 0 #804000, 2px 2px 0 #c07000;
+  letter-spacing: 2px;
+  animation: title-flash 4s step-end infinite;
+}
+
+.title-info {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.live-pill {
+  background: var(--color-red);
+  color: #fff;
+  padding: 4px 8px;
+  font-size: 7px;
+  animation: blink-bg 1s step-end infinite;
+  letter-spacing: 1px;
+}
+
+.timer-big {
+  font-size: clamp(12px, 2.5vw, 20px);
+  color: var(--color-green);
+  text-shadow: 0 0 8px #00ff4488;
+  letter-spacing: 3px;
+}
+
+.season-tag {
+  font-size: 7px;
+  color: var(--color-dim);
+  letter-spacing: 1px;
+}
+
+.main-area {
+  display: grid;
+  grid-template-columns: 200px 1fr 220px;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.panel-title {
+  background: var(--color-border2);
+  color: var(--color-gold);
+  padding: 6px 10px;
+  font-size: 7px;
+  letter-spacing: 2px;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.arena-wrap {
+  position: relative;
+  max-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.arena-canvas-el {
+  width: 100%;
+  max-height: 100%;
+  aspect-ratio: 1;
+  image-rendering: pixelated;
+  display: block;
+}
+
+
+@keyframes title-flash {
+  0%, 90%, 100% { opacity: 1; }
+  92%, 98% { opacity: 0.2; }
+}
+
+@keyframes blink-bg {
+  0%, 100% { background: var(--color-red); }
+  50% { background: #800; }
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes log-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dmg-rise {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-60px); }
+}

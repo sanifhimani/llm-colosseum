@@ -1,19 +1,24 @@
+import { useEffect } from 'react';
 import TitleBar from './components/TitleBar';
 import ArenaCanvas from './components/ArenaCanvas';
 import FightersPanel from './components/FightersPanel';
 import useGameState from './hooks/useGameState';
+import useSimulation from './hooks/useSimulation';
 
 function App() {
-  const { agents, artifacts, zoneRadius } = useGameState();
+  const game = useGameState();
+  const { start } = useSimulation(game);
+
+  useEffect(() => { start(); }, [start]);
 
   return (
     <div className="screen">
       <TitleBar />
 
       <div className="main-area">
-        <FightersPanel agents={agents} />
+        <FightersPanel agents={game.agents} />
 
-        <ArenaCanvas agents={agents} artifacts={artifacts} zoneRadius={zoneRadius} />
+        <ArenaCanvas agents={game.agents} artifacts={game.artifacts} zoneRadius={game.zoneRadius} />
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <div className="pbox" style={{ overflow: 'hidden' }}>

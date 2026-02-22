@@ -11,6 +11,7 @@ function createInitialState() {
     turn: 0,
     grudges: {},
     events: [],
+    eventSeq: 0,
   };
 }
 
@@ -22,7 +23,7 @@ export default function useGameState() {
   }, []);
 
   const reset = useCallback(() => {
-    setState(createInitialState());
+    setState(createInitialState);
   }, []);
 
   return { ...state, update, reset };

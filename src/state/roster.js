@@ -21,9 +21,12 @@ export function createAgents() {
     ...entry,
     hp: START_HP,
     maxHp: START_HP,
-    pos: STARTING_POSITIONS[entry.id],
+    pos: [...STARTING_POSITIONS[entry.id]],
     alive: true,
     alliances: [],
-    trust: 3,
+    trust: 50,
+    pendingAlly: null,
+    weaponBuff: false,
+    shieldHp: 0,
   }));
 }

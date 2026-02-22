@@ -1,8 +1,9 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import { applyMove, applyAttack, applyAlly, applyBetray, applyUseArtifact, pickRandomAction } from '../simulation/actions';
 import { checkZoneShrink, applyZoneDamage } from '../simulation/zone';
 
 const TICK_MS = 800;
+const MAX_EVENTS = 500;
 
 function resolveAction(action, state) {
   const { agents, artifacts, grudges } = state;
@@ -16,92 +17,93 @@ function resolveAction(action, state) {
   }
 }
 
-export default function useSimulation({ agents, artifacts, zoneRadius, turn, grudges, update }) {
-  const [running, setRunning] = useState(false);
-  const intervalRef = useRef(null);
-  const stateRef = useRef({ agents, artifacts, zoneRadius, turn, grudges });
+function computeTick(prev) {
+  const { agents, artifacts, zoneRadius, turn, grudges, events } = prev;
+  let { eventSeq } = prev;
+  const alive = agents.filter((a) => a.alive);
 
-  useEffect(() => {
-    stateRef.current = { agents, artifacts, zoneRadius, turn, grudges };
-  }, [agents, artifacts, zoneRadius, turn, grudges]);
+  if (alive.length <= 1) {
+    const winner = alive[0];
+    if (winner && !events.some((e) => e.type === 'victory')) {
+      return {
+        ...prev,
+        eventSeq: eventSeq + 1,
+        events: [...events.slice(-MAX_EVENTS), { id: eventSeq + 1, turn, type: 'victory', agent: winner.id }],
+      };
+    }
+    return prev;
+  }
+
+  const agentIndex = turn % alive.length;
+  const agent = alive[agentIndex];
+  const action = pickRandomAction(agent, agents, artifacts);
+  const result = resolveAction({ ...action, agent: agent.id }, { agents, artifacts, grudges });
+
+  const newAgents = result.agents || agents;
+  const newArtifacts = result.artifacts || artifacts;
+  const newGrudges = result.grudges || grudges;
+  const newTurn = turn + 1;
+  const newEvents = [];
+
+  if (result.event) {
+    eventSeq++;
+    newEvents.push({ id: eventSeq, ...result.event, turn: newTurn });
+  }
+
+  const newZoneRadius = checkZoneShrink(newTurn, zoneRadius);
+  const zoneDmg = applyZoneDamage(newAgents, newZoneRadius);
+  const finalAgents = zoneDmg.events.length > 0 ? zoneDmg.agents : newAgents;
+  for (const e of zoneDmg.events) {
+    eventSeq++;
+    newEvents.push({ id: eventSeq, ...e, turn: newTurn });
+  }
+
+  const finalAlive = finalAgents.filter((a) => a.alive);
+  if (finalAlive.length === 1) {
+    eventSeq++;
+    newEvents.push({ id: eventSeq, turn: newTurn, type: 'victory', agent: finalAlive[0].id });
+  }
+
+  return {
+    ...prev,
+    agents: finalAgents,
+    artifacts: newArtifacts,
+    grudges: newGrudges,
+    zoneRadius: newZoneRadius,
+    turn: newTurn,
+    eventSeq,
+    events: [...events.slice(-MAX_EVENTS), ...newEvents],
+  };
+}
+
+export default function useSimulation({ agents, update }) {
+  const intervalRef = useRef(null);
 
   const tick = useCallback(() => {
-    const state = stateRef.current;
-    const alive = state.agents.filter((a) => a.alive);
-
-    if (alive.length <= 1) {
-      setRunning(false);
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      intervalRef.current = null;
-      const winner = alive[0];
-      if (winner) {
-        update((prev) => ({
-          ...prev,
-          events: [...prev.events, { turn: state.turn, type: 'victory', agent: winner.id }],
-        }));
-      }
-      return;
-    }
-
-    const agentIndex = state.turn % alive.length;
-    const agent = alive[agentIndex];
-    const action = pickRandomAction(agent, state.agents, state.artifacts);
-    const result = resolveAction({ ...action, agent: agent.id }, state);
-
-    const newAgents = result.agents || state.agents;
-    const newArtifacts = result.artifacts || state.artifacts;
-    const newGrudges = result.grudges || state.grudges;
-    const newTurn = state.turn + 1;
-    const newEvents = [];
-
-    if (result.event) newEvents.push({ ...result.event, turn: newTurn });
-
-    let newZoneRadius = state.zoneRadius;
-    const newAlive = newAgents.filter((a) => a.alive);
-    if (newAlive.length > 0 && newTurn % newAlive.length === 0) {
-      newZoneRadius = checkZoneShrink(newTurn, state.zoneRadius);
-      const zoneDmg = applyZoneDamage(newAgents, newZoneRadius);
-      if (zoneDmg.events.length > 0) {
-        newEvents.push(...zoneDmg.events.map((e) => ({ ...e, turn: newTurn })));
-        update((prev) => ({
-          ...prev,
-          agents: zoneDmg.agents,
-          artifacts: newArtifacts,
-          grudges: newGrudges,
-          zoneRadius: newZoneRadius,
-          turn: newTurn,
-          events: [...prev.events, ...newEvents],
-        }));
-        return;
-      }
-    }
-
-    update((prev) => ({
-      ...prev,
-      agents: newAgents,
-      artifacts: newArtifacts,
-      grudges: newGrudges,
-      zoneRadius: newZoneRadius,
-      turn: newTurn,
-      events: [...prev.events, ...newEvents],
-    }));
+    update(computeTick);
   }, [update]);
 
-  const start = useCallback(() => {
-    if (intervalRef.current) return;
-    setRunning(true);
-    intervalRef.current = setInterval(tick, TICK_MS);
-  }, [tick]);
-
   const stop = useCallback(() => {
-    setRunning(false);
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
   }, []);
 
+  const start = useCallback(() => {
+    stop();
+    intervalRef.current = setInterval(tick, TICK_MS);
+  }, [tick, stop]);
+
+  useEffect(() => {
+    const alive = agents.filter((a) => a.alive);
+    if (alive.length <= 1 && intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, [agents]);
+
   useEffect(() => () => stop(), [stop]);
 
-  return { running, start, stop };
+  return { start, stop };
 }

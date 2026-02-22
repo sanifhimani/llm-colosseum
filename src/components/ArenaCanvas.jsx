@@ -5,9 +5,9 @@ import { drawWalls } from '../canvas/walls';
 import { drawZone } from '../canvas/zone';
 import { drawArtifacts } from '../canvas/artifacts';
 import { drawAlliances } from '../canvas/alliances';
-import { drawAgent, drawDead, drawNametag } from '../canvas/agents';
+import { drawAgent, drawDead, drawNametags } from '../canvas/agents';
 
-export default function ArenaCanvas({ agents = [], artifacts = [], zoneRadius }) {
+export default function ArenaCanvas({ agents = [], artifacts = [], zoneRadius, children }) {
   const canvasRef = useRef(null);
   const frameRef = useRef(null);
   const dataRef = useRef({ agents, artifacts, zoneRadius });
@@ -49,9 +49,7 @@ export default function ArenaCanvas({ agents = [], artifacts = [], zoneRadius })
             drawDead(ctx, agent);
           }
         }
-        for (const agent of agents) {
-          drawNametag(ctx, agent);
-        }
+        drawNametags(ctx, agents);
       }
 
       frameRef.current = requestAnimationFrame(render);
@@ -72,6 +70,7 @@ export default function ArenaCanvas({ agents = [], artifacts = [], zoneRadius })
         width={CANVAS_SIZE}
         height={CANVAS_SIZE}
       />
+      {children}
     </div>
   );
 }

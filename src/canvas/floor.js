@@ -1,6 +1,11 @@
-import { GRID_SIZE, CELL_SIZE } from '../state/constants';
+import { GRID_SIZE, CELL_SIZE, CANVAS_SIZE } from '../state/constants';
 
-export function drawFloor(ctx) {
+let cache = null;
+
+function buildFloor() {
+  const offscreen = new OffscreenCanvas(CANVAS_SIZE, CANVAS_SIZE);
+  const ctx = offscreen.getContext('2d');
+
   for (let r = 0; r < GRID_SIZE; r++) {
     for (let c = 0; c < GRID_SIZE; c++) {
       const x = c * CELL_SIZE;
@@ -12,4 +17,11 @@ export function drawFloor(ctx) {
       ctx.fillRect(x, y, 1, CELL_SIZE);
     }
   }
+
+  return offscreen;
+}
+
+export function drawFloor(ctx) {
+  if (!cache) cache = buildFloor();
+  ctx.drawImage(cache, 0, 0);
 }

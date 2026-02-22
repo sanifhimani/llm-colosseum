@@ -1,4 +1,5 @@
 import TitleBar from './components/TitleBar';
+import ArenaCanvas from './components/ArenaCanvas';
 
 function App() {
   return (
@@ -10,9 +11,7 @@ function App() {
           <div className="panel-title">{'\u25B6'} FIGHTERS</div>
         </div>
 
-        <div className="arena-wrap pbox" style={{ padding: 0, overflow: 'hidden' }}>
-          <div className="arena-canvas-el" style={{ background: '#1a1a2a' }} />
-        </div>
+        <ArenaCanvas />
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <div className="pbox" style={{ overflow: 'hidden' }}>

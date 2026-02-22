@@ -1,17 +1,19 @@
 import TitleBar from './components/TitleBar';
 import ArenaCanvas from './components/ArenaCanvas';
+import FightersPanel from './components/FightersPanel';
+import useGameState from './hooks/useGameState';
 
 function App() {
+  const { agents, artifacts, zoneRadius } = useGameState();
+
   return (
     <div className="screen">
       <TitleBar />
 
       <div className="main-area">
-        <div className="pbox" style={{ overflow: 'hidden' }}>
-          <div className="panel-title">{'\u25B6'} FIGHTERS</div>
-        </div>
+        <FightersPanel agents={agents} />
 
-        <ArenaCanvas />
+        <ArenaCanvas agents={agents} artifacts={artifacts} zoneRadius={zoneRadius} />
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           <div className="pbox" style={{ overflow: 'hidden' }}>

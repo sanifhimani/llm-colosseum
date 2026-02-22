@@ -31,7 +31,7 @@
       "name": "GROK",
       "model": "grok-3",
       "provider": "xai",
-      "color": "#40b0e0"
+      "color": "#a0a0a8"
     }
   ],
   "rules": {

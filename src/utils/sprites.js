@@ -66,7 +66,7 @@ function spriteGrok(ctx, px, py, s, col) {
     '.GG.GG.',
     ' G   G ',
     ' G   G ',
-  ], { G: col, '#': '#222', '.': '#1188cc' });
+  ], { G: col, '#': '#222', '.': '#606068' });
 }
 
 function spriteDefault(ctx, px, py, s, col) {

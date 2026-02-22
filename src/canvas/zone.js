@@ -12,9 +12,10 @@ export function drawZone(ctx, zoneRadius, now) {
   ctx.fillRect(0, y1, x1, size);
   ctx.fillRect(x1 + size, y1, CANVAS_SIZE - x1 - size, size);
 
+  ctx.save();
   const alpha = 0.4 + 0.3 * Math.sin(now / 600);
   ctx.strokeStyle = `rgba(255,50,80,${alpha})`;
   ctx.lineWidth = 4;
   ctx.strokeRect(x1, y1, size, size);
-  ctx.lineWidth = 1;
+  ctx.restore();
 }

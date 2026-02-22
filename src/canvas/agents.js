@@ -41,6 +41,7 @@ export function drawDead(ctx, agent) {
   const cx = c * CELL_SIZE + CELL_SIZE / 2;
   const cy = r * CELL_SIZE + CELL_SIZE / 2;
 
+  ctx.save();
   ctx.globalAlpha = 0.35;
   ctx.fillStyle = '#888';
   ctx.fillRect(cx - 6, cy - 6, 12, 10);
@@ -48,7 +49,7 @@ export function drawDead(ctx, agent) {
   ctx.fillRect(cx - 4, cy - 4, 3, 3);
   ctx.fillRect(cx + 1, cy - 4, 3, 3);
   ctx.fillRect(cx - 1, cy + 2, 2, 2);
-  ctx.globalAlpha = 1;
+  ctx.restore();
 }
 
 export function drawNametag(ctx, agent) {
@@ -56,16 +57,19 @@ export function drawNametag(ctx, agent) {
   const cx = c * CELL_SIZE + CELL_SIZE / 2;
   const cy = r * CELL_SIZE + 4;
   const name = agent.name.split(' ')[0];
-  const width = name.length * 4 + 4;
 
-  const alpha = agent.alive ? 1 : 0.35;
-  ctx.globalAlpha = alpha;
+  ctx.save();
+  ctx.globalAlpha = agent.alive ? 1 : 0.35;
   ctx.font = '5px "Press Start 2P", monospace';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
+
+  const measured = ctx.measureText(name);
+  const width = measured.width + 4;
+
   ctx.fillStyle = 'rgba(0,0,0,0.7)';
   ctx.fillRect(cx - width / 2, cy, width, 8);
   ctx.fillStyle = agent.alive ? agent.color : '#888';
   ctx.fillText(name, cx, cy + 1);
-  ctx.globalAlpha = 1;
+  ctx.restore();
 }

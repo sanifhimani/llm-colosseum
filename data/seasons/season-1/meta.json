@@ -1,0 +1,51 @@
+{
+  "season": 1,
+  "name": "The Inaugural Arena",
+  "startDate": "2026-02-23",
+  "endDate": null,
+  "status": "active",
+  "roster": [
+    {
+      "id": "claude",
+      "name": "CLAUDE",
+      "model": "claude-sonnet-4-6",
+      "provider": "anthropic",
+      "color": "#e07820"
+    },
+    {
+      "id": "gpt",
+      "name": "GPT",
+      "model": "gpt-4.1",
+      "provider": "openai",
+      "color": "#20c090"
+    },
+    {
+      "id": "gemini",
+      "name": "GEMINI",
+      "model": "gemini-2.5-flash",
+      "provider": "google",
+      "color": "#4090f0"
+    },
+    {
+      "id": "grok",
+      "name": "GROK",
+      "model": "grok-3",
+      "provider": "xai",
+      "color": "#40b0e0"
+    }
+  ],
+  "rules": {
+    "gridSize": 12,
+    "startHp": 100,
+    "maxTurns": 200,
+    "zoneShrinkInterval": 30,
+    "minZoneRadius": 3,
+    "attackDamageMin": 8,
+    "attackDamageMax": 30,
+    "betrayDamageMin": 15,
+    "betrayDamageMax": 35,
+    "zoneDamage": 5,
+    "apiTimeoutMs": 15000,
+    "turnPauseMs": 3000
+  }
+}

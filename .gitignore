@@ -1,0 +1,28 @@
+# dependencies
+node_modules
+
+# build
+dist
+dist-ssr
+
+# env files
+*.local
+engine/.env
+
+# logs
+logs
+*.log
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# runtime
+data/checkpoint.json

@@ -1,0 +1,18 @@
+{
+  "name": "llm-colosseum-engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun run index.js",
+    "start": "bun run index.js",
+    "trigger": "bun run index.js --trigger"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.52.0",
+    "@google/generative-ai": "^0.24.0",
+    "hono": "^4.7.0",
+    "node-cron": "^3.0.3",
+    "openai": "^5.1.0"
+  }
+}

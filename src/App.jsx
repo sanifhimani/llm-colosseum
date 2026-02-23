@@ -9,6 +9,7 @@ import LastBattlePage from './pages/LastBattlePage';
 import useGameState from './hooks/useGameState';
 import useSimulation from './hooks/useSimulation';
 import useBattleSocket from './hooks/useBattleSocket';
+import useSchedule from './hooks/useSchedule';
 
 const WS_URL = import.meta.env.VITE_WS_URL ||
   `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/battle`;
@@ -21,7 +22,7 @@ function useMode() {
   }, [search]);
 }
 
-function PageRouter({ game, onSimulate, onDismiss }) {
+function PageRouter({ game, onSimulate, onDismiss, nextBattle }) {
   const { pathname } = useLocation();
 
   const fighterMatch = matchRoute('/fighters/:id', pathname);
@@ -31,12 +32,13 @@ function PageRouter({ game, onSimulate, onDismiss }) {
   if (pathname === '/fighters') return <FightersPage />;
   if (pathname === '/last-battle') return <LastBattlePage />;
 
-  return <ArenaPage game={game} onSimulate={onSimulate} onDismiss={onDismiss} />;
+  return <ArenaPage game={game} onSimulate={onSimulate} onDismiss={onDismiss} nextBattle={nextBattle} />;
 }
 
 function App() {
   const mode = useMode();
   const game = useGameState();
+  const schedule = useSchedule();
   const [simulating, setSimulating] = useState(false);
 
   const { reset, setPersist } = game;
@@ -65,7 +67,7 @@ function App() {
   return (
     <div className="app-shell">
       <TopNav live={!simulating && battleActive} simulating={simulating && battleActive} />
-      <PageRouter game={game} onSimulate={handleSimulate} onDismiss={handleDismiss} />
+      <PageRouter game={game} onSimulate={handleSimulate} onDismiss={handleDismiss} nextBattle={schedule.nextBattle} />
     </div>
   );
 }

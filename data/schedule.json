@@ -2,10 +2,6 @@
   "timezone": "America/New_York",
   "weekday": "18:00",
   "weekend": "14:00",
-  "cron": {
-    "weekday_utc": "0 23 * * 1-5",
-    "weekend_utc": "0 19 * * 0,6"
-  },
   "enabled": true,
   "currentSeason": 1
 }

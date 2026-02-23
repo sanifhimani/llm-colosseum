@@ -154,27 +154,60 @@ export function createDataRoutes(dataDir) {
   return app;
 }
 
+function parseTime(timeStr) {
+  const [hour, minute] = timeStr.split(':').map(Number);
+  return { hour, minute };
+}
+
+function localTimeToUtc(year, month, day, hour, minute, tz) {
+  const utcGuess = new Date(Date.UTC(year, month - 1, day, hour, minute, 0));
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: tz,
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).formatToParts(utcGuess);
+
+  const tzHour = parseInt(parts.find((p) => p.type === 'hour').value, 10) % 24;
+  const tzMinute = parseInt(parts.find((p) => p.type === 'minute').value, 10);
+  const offsetMs = ((tzHour - hour) * 60 + (tzMinute - minute)) * 60000;
+
+  return new Date(utcGuess.getTime() - offsetMs);
+}
+
+const DAY_MS = 86400000;
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
 function computeNextBattleTime(schedule) {
+  const tz = schedule.timezone;
   const now = new Date();
-  const weekdayHour = parseInt(schedule.weekday?.split(':')[0] || '18', 10);
-  const weekdayMin = parseInt(schedule.weekday?.split(':')[1] || '0', 10);
-  const weekendHour = parseInt(schedule.weekend?.split(':')[0] || '14', 10);
-  const weekendMin = parseInt(schedule.weekend?.split(':')[1] || '0', 10);
+  const weekdayTime = parseTime(schedule.weekday);
+  const weekendTime = parseTime(schedule.weekend);
+
+  const dayFmt = new Intl.DateTimeFormat('en-US', {
+    timeZone: tz,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    weekday: 'short',
+  });
 
   for (let offset = 0; offset <= 7; offset++) {
-    const candidate = new Date(now);
-    candidate.setDate(candidate.getDate() + offset);
+    const ref = new Date(now.getTime() + offset * DAY_MS);
+    const parts = Object.fromEntries(
+      dayFmt.formatToParts(ref).map(({ type, value }) => [type, value])
+    );
 
-    const dow = candidate.getDay();
+    const dow = DAYS.indexOf(parts.weekday);
     const isWeekend = dow === 0 || dow === 6;
-    const hour = isWeekend ? weekendHour : weekdayHour;
-    const min = isWeekend ? weekendMin : weekdayMin;
+    const { hour, minute } = isWeekend ? weekendTime : weekdayTime;
 
-    candidate.setHours(hour, min, 0, 0);
+    const year = parseInt(parts.year, 10);
+    const month = parseInt(parts.month, 10);
+    const day = parseInt(parts.day, 10);
 
-    if (candidate > now) {
-      return candidate.toISOString();
-    }
+    const candidate = localTimeToUtc(year, month, day, hour, minute, tz);
+    if (candidate > now) return candidate.toISOString();
   }
 
   return null;

@@ -8,7 +8,7 @@ import DamageFloat from '../components/DamageFloat';
 import VictoryScreen from '../components/VictoryScreen';
 import IdleOverlay from '../components/IdleOverlay';
 
-export default function ArenaPage({ game, onSimulate, onDismiss }) {
+export default function ArenaPage({ game, onSimulate, onDismiss, nextBattle }) {
   const isIdle = game.turn === 0 && !game.victory;
 
   return (
@@ -31,7 +31,7 @@ export default function ArenaPage({ game, onSimulate, onDismiss }) {
       </div>
 
       {isIdle && (
-        <IdleOverlay onSimulate={onSimulate} />
+        <IdleOverlay onSimulate={onSimulate} nextBattle={nextBattle} />
       )}
 
       {game.victory && (

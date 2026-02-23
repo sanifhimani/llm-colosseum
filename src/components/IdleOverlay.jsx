@@ -4,20 +4,10 @@ import { ROSTER } from '../state/roster';
 import useApi from '../hooks/useApi';
 import AgentSprite from './AgentSprite';
 
-const BATTLE_HOUR_UTC = 23;
+function formatCountdown(targetMs) {
+  if (!targetMs) return '--:--:--';
 
-function getNextBattleTime() {
-  const now = new Date();
-  const target = new Date(now);
-  target.setUTCHours(BATTLE_HOUR_UTC, 0, 0, 0);
-  if (target.getTime() <= now.getTime()) {
-    target.setUTCDate(target.getUTCDate() + 1);
-  }
-  return target.getTime();
-}
-
-function formatCountdown() {
-  const diff = getNextBattleTime() - Date.now();
+  const diff = targetMs - Date.now();
   if (diff <= 0) return '--:--:--';
 
   const hours = Math.floor(diff / 3600000);
@@ -57,16 +47,17 @@ const NAV_CARDS = [
   { to: '/last-battle', icon: '>', title: 'LAST BATTLE', desc: 'FULL TRANSCRIPT' },
 ];
 
-export default function IdleOverlay({ onSimulate }) {
-  const [countdown, setCountdown] = useState(formatCountdown);
+export default function IdleOverlay({ onSimulate, nextBattle }) {
+  const targetMs = nextBattle ? new Date(nextBattle).getTime() : null;
+  const [countdown, setCountdown] = useState(() => formatCountdown(targetMs));
   const { data: standings } = useApi('/api/standings');
 
   useEffect(() => {
     const id = setInterval(() => {
-      setCountdown(formatCountdown());
+      setCountdown(formatCountdown(targetMs));
     }, 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [targetMs]);
 
   const agents = standings?.agents ?? {};
   const season = standings?.season ?? 1;

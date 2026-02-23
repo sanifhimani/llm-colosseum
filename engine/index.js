@@ -5,6 +5,7 @@ import { createAgentsFromRoster } from './agents/factory.js';
 import { runBattle } from './battle.js';
 import { nextDayNumber, buildTranscript, writeTranscript, updateStandings, updateMemory } from './persistence.js';
 import { createDataRoutes } from './routes/data.js';
+import { startScheduler } from './scheduler.js';
 
 const useMock = process.env.USE_MOCK === 'true';
 
@@ -158,3 +159,7 @@ const server = Bun.serve({
 });
 
 console.log(`[engine] listening on :${server.port}`);
+
+startScheduler(DATA_DIR, () => {
+  if (!activeBattle) startBattle();
+});

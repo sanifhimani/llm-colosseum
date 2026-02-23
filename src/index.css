@@ -671,3 +671,134 @@ body::after {
   0% { opacity: 1; transform: translateX(-50%) translateY(0); }
   100% { opacity: 0; transform: translateX(-50%) translateY(-60px); }
 }
+
+.empty-state {
+  font-size: 10px;
+  color: var(--color-dim);
+  letter-spacing: 2px;
+  text-align: center;
+  padding: 48px 0;
+}
+
+.section-title {
+  font-size: 10px;
+  color: var(--color-gold);
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+.section-label {
+  font-size: 7px;
+  color: var(--color-dim);
+  letter-spacing: 1px;
+}
+
+.standings-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8px;
+}
+
+.standings-table th {
+  text-align: left;
+  color: var(--color-dim);
+  font-size: 7px;
+  letter-spacing: 1px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--color-border2);
+}
+
+.standings-table td {
+  padding: 8px;
+  border-bottom: 1px solid var(--color-border2);
+  white-space: nowrap;
+}
+
+.standings-table tbody tr:hover {
+  background: rgba(58, 110, 168, 0.08);
+}
+
+.standings-rank {
+  color: var(--color-gold);
+}
+
+.standings-rank-dim {
+  color: var(--color-dim);
+}
+
+.standings-name-link {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-decoration: none;
+}
+
+.standings-name {
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.standings-model {
+  font-size: 7px;
+  color: var(--color-dim);
+}
+
+.standings-record {
+  color: var(--color-green);
+}
+
+.standings-record-loss {
+  color: var(--color-red);
+}
+
+.standings-stat {
+  color: var(--color-white);
+}
+
+.standings-stat-bad {
+  color: var(--color-red);
+}
+
+.standings-trust-bar {
+  display: inline-block;
+  width: 48px;
+  height: 4px;
+  background: #111;
+  vertical-align: middle;
+}
+
+.standings-trust-fill {
+  height: 100%;
+}
+
+.h2h-grid {
+  display: grid;
+  gap: 2px;
+  text-align: center;
+}
+
+.h2h-header {
+  font-size: 7px;
+  letter-spacing: 1px;
+  padding: 6px 4px;
+}
+
+.h2h-cell {
+  font-size: 9px;
+  padding: 8px 4px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--color-white);
+}
+
+.h2h-self {
+  color: var(--color-dim);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.h2h-win {
+  color: var(--color-green);
+}
+
+.h2h-loss {
+  color: var(--color-red);
+}

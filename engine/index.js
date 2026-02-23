@@ -3,6 +3,7 @@ import { cors } from 'hono/cors';
 import { loadSeasonMeta } from './game/state.js';
 import { createAgentsFromRoster } from './agents/factory.js';
 import { runBattle } from './battle.js';
+import { nextDayNumber, buildTranscript, writeTranscript, updateStandings, updateMemory } from './persistence.js';
 
 const useMock = process.env.USE_MOCK === 'true';
 
@@ -64,9 +65,12 @@ async function startBattle() {
     activeBattle = { turn: 0, startedAt: new Date().toISOString() };
     lastBattleState = null;
 
+    const eventLog = [];
+    const turnLog = [];
+
     console.log('[battle] starting');
 
-    const { winner, turns } = await runBattle(meta, agents, {
+    const battleResult = await runBattle(meta, agents, {
       turnPauseMs: meta.rules.turnPauseMs || 0,
       onEvent(event) {
         if (event.turn !== undefined) {
@@ -75,11 +79,42 @@ async function startBattle() {
         if (event.state) {
           lastBattleState = event.state;
         }
+        eventLog.push({ ...event, timestamp: new Date().toISOString() });
+        if (event.type === 'turn') {
+          turnLog.push({
+            turn: event.turn,
+            agent: event.agent,
+            action: event.action,
+            thinking: event.thinking,
+            event: event.event,
+            latencyMs: event.latencyMs,
+            tokensUsed: event.tokensUsed,
+          });
+        }
         broadcast(event);
       },
     });
 
+    const { winner, turns } = battleResult;
     console.log(`[battle] ended -- winner: ${winner?.name || 'none'} after ${turns} turns`);
+
+    try {
+      const day = nextDayNumber(DATA_DIR, meta.season);
+      const transcript = buildTranscript(day, meta.season, battleResult, turnLog, eventLog);
+      const filePath = writeTranscript(DATA_DIR, meta.season, transcript);
+      console.log(`[persist] transcript written: ${filePath}`);
+
+      updateStandings(DATA_DIR, meta.season, battleResult.state, winner, eventLog);
+      console.log('[persist] standings updated');
+
+      for (const agent of battleResult.state.agents) {
+        const won = winner && agent.id === winner.id;
+        updateMemory(DATA_DIR, meta.season, agent.id, day, won, battleResult.state);
+      }
+      console.log('[persist] memories updated');
+    } catch (err) {
+      console.error('[persist] error:', err);
+    }
   } catch (err) {
     console.error('[battle] error:', err);
   } finally {

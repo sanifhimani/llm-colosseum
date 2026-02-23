@@ -32,6 +32,7 @@ export async function runBattle(meta, agents, { onEvent, turnPauseMs = 0 } = {})
       thinking: turnResult.thinking,
       event,
       latencyMs: turnResult.latencyMs,
+      tokensUsed: turnResult.tokensUsed,
       state: snapshotState(state),
     });
 
@@ -99,12 +100,12 @@ async function executeTurn(state, agent, agentInstance) {
 
   const parsed = parseResponse(response.text);
   if (!parsed) {
-    return { action: { type: 'INVALID' }, thinking: INVALID_THINKING, latencyMs: response.latencyMs };
+    return { action: { type: 'INVALID' }, thinking: INVALID_THINKING, latencyMs: response.latencyMs, tokensUsed: response.usage };
   }
 
   const resolved = resolveAction(parsed.action, state, agent);
   if (!resolved) {
-    return { action: { type: 'INVALID' }, thinking: parsed.thinking, latencyMs: response.latencyMs };
+    return { action: { type: 'INVALID' }, thinking: parsed.thinking, latencyMs: response.latencyMs, tokensUsed: response.usage };
   }
 
   return {

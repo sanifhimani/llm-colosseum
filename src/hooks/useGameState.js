@@ -75,8 +75,10 @@ function deriveVictory(next) {
 export default function useGameState() {
   const [state, setState] = useState(createInitialState);
   const prevRef = useRef({ events: state.events, victory: state.victory });
+  const persistRef = useRef(true);
 
   useEffect(() => {
+    if (!persistRef.current) return;
     if (state.events !== prevRef.current.events || state.victory !== prevRef.current.victory) {
       prevRef.current = { events: state.events, victory: state.victory };
       persist(state);
@@ -96,5 +98,9 @@ export default function useGameState() {
     setState(createInitialState);
   }, []);
 
-  return { ...state, update, reset };
+  const setPersist = useCallback((enabled) => {
+    persistRef.current = enabled;
+  }, []);
+
+  return { ...state, update, reset, setPersist };
 }

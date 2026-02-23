@@ -107,6 +107,12 @@ export default function useSimulation({ agents, update }) {
     intervalRef.current = setInterval(tick, TICK_MS);
   }, [tick, stop]);
 
+  const restart = useCallback(() => {
+    doneRef.current = false;
+    stop();
+    intervalRef.current = setInterval(tick, TICK_MS);
+  }, [tick, stop]);
+
   useEffect(() => {
     const alive = agents.filter((a) => a.alive);
     if (alive.length <= 1 && intervalRef.current) {
@@ -117,5 +123,5 @@ export default function useSimulation({ agents, update }) {
 
   useEffect(() => () => stop(), [stop]);
 
-  return { start, stop };
+  return { start, stop, restart };
 }

@@ -6,8 +6,11 @@ import ZonePanel from '../components/ZonePanel';
 import DialogueBox from '../components/DialogueBox';
 import DamageFloat from '../components/DamageFloat';
 import VictoryScreen from '../components/VictoryScreen';
+import IdleOverlay from '../components/IdleOverlay';
 
-export default function ArenaPage({ game }) {
+export default function ArenaPage({ game, onSimulate, onDismiss }) {
+  const isIdle = game.turn === 0 && !game.victory;
+
   return (
     <div className="arena-screen">
       <div className="main-area">
@@ -27,10 +30,14 @@ export default function ArenaPage({ game }) {
         </div>
       </div>
 
+      {isIdle && (
+        <IdleOverlay onSimulate={onSimulate} />
+      )}
+
       {game.victory && (
         <VictoryScreen
           stats={game.victory}
-          onDismiss={game.reset}
+          onDismiss={onDismiss}
         />
       )}
     </div>

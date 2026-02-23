@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, matchRoute } from './router';
 import TopNav from './components/TopNav';
 import ArenaPage from './pages/ArenaPage';
@@ -21,7 +21,7 @@ function useMode() {
   }, [search]);
 }
 
-function PageRouter({ game }) {
+function PageRouter({ game, onSimulate, onDismiss }) {
   const { pathname } = useLocation();
 
   const fighterMatch = matchRoute('/fighters/:id', pathname);
@@ -31,24 +31,41 @@ function PageRouter({ game }) {
   if (pathname === '/fighters') return <FightersPage />;
   if (pathname === '/last-battle') return <LastBattlePage />;
 
-  return <ArenaPage game={game} />;
+  return <ArenaPage game={game} onSimulate={onSimulate} onDismiss={onDismiss} />;
 }
 
 function App() {
   const mode = useMode();
   const game = useGameState();
+  const [simulating, setSimulating] = useState(false);
 
-  const { start } = useSimulation(game);
+  const { reset, setPersist } = game;
+  const { start, restart } = useSimulation(game);
   useBattleSocket(game, mode === 'live' ? WS_URL : null);
 
   useEffect(() => {
     if (mode === 'demo') start();
   }, [mode, start]);
 
+  const handleSimulate = useCallback(() => {
+    setPersist(false);
+    setSimulating(true);
+    reset();
+    restart();
+  }, [setPersist, reset, restart]);
+
+  const handleDismiss = useCallback(() => {
+    setSimulating(false);
+    setPersist(true);
+    reset();
+  }, [setPersist, reset]);
+
+  const battleActive = game.turn > 0 && !game.victory;
+
   return (
     <div className="app-shell">
-      <TopNav live={game.turn > 0 && !game.victory} />
-      <PageRouter game={game} />
+      <TopNav live={!simulating && battleActive} simulating={simulating && battleActive} />
+      <PageRouter game={game} onSimulate={handleSimulate} onDismiss={handleDismiss} />
     </div>
   );
 }

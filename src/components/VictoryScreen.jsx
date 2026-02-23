@@ -1,31 +1,9 @@
-import { useRef, useEffect, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ROSTER } from '../state/roster';
-import { drawAgentSprite } from '../utils/sprites';
 import { generateShareCard } from '../utils/shareCard';
+import AgentSprite from './AgentSprite';
 
 const AGENT_MAP = Object.fromEntries(ROSTER.map((r) => [r.id, r]));
-
-function WinnerSprite({ agentId, color }) {
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    ctx.imageSmoothingEnabled = false;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawAgentSprite(ctx, agentId, 2, 1, 4, color);
-  }, [agentId, color]);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      width={32}
-      height={36}
-      style={{ imageRendering: 'pixelated' }}
-    />
-  );
-}
 
 export default function VictoryScreen({ stats, onDismiss }) {
   const [sharing, setSharing] = useState(false);
@@ -61,7 +39,7 @@ export default function VictoryScreen({ stats, onDismiss }) {
   return (
     <div className="victory-overlay" onClick={onDismiss}>
       <div className="victory-panel pbox pbox-gold" onClick={(e) => e.stopPropagation()}>
-        <WinnerSprite agentId={winner.id} color={winnerColor} />
+        <AgentSprite agentId={winner.id} color={winnerColor} />
 
         <div className="victory-title" style={{ color: winnerColor }}>
           WINNER: {winnerName}

@@ -4,6 +4,7 @@ import { loadSeasonMeta } from './game/state.js';
 import { createAgentsFromRoster } from './agents/factory.js';
 import { runBattle } from './battle.js';
 import { nextDayNumber, buildTranscript, writeTranscript, updateStandings, updateMemory } from './persistence.js';
+import { createDataRoutes } from './routes/data.js';
 
 const useMock = process.env.USE_MOCK === 'true';
 
@@ -12,6 +13,7 @@ const port = process.env.PORT || 8080;
 const DATA_DIR = new URL('../data', import.meta.url).pathname;
 
 app.use('*', cors());
+app.route('/api', createDataRoutes(DATA_DIR));
 
 const viewers = new Set();
 let activeBattle = null;

@@ -117,7 +117,7 @@ async function executeTurn(state, agent, agentInstance) {
 }
 
 function executeAutopilot(state, agent) {
-  const action = pickRandomAction(agent, state.agents, state.artifacts);
+  const action = pickRandomAction(agent, state.agents, state.artifacts, state.rules.attackRange);
   return { action, thinking: 'AUTOPILOT ENGAGED...', latencyMs: 0 };
 }
 

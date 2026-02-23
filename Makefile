@@ -2,7 +2,7 @@
 
 dev: ## Run frontend + engine together
 	@trap 'kill 0' EXIT; \
-		cd engine && bun run index.js & \
+		cd engine && USE_MOCK=true bun run index.js & \
 		bun run dev & \
 		wait
 

@@ -3,9 +3,14 @@ import { GRID_SIZE } from '../state/constants';
 const DIRECTIONS = { N: [-1, 0], S: [1, 0], E: [0, 1], W: [0, -1] };
 const DIR_KEYS = Object.keys(DIRECTIONS);
 const GRUDGE_SEP = '|';
+const ATTACK_RANGE = 3;
 
 function rand(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function manhattan(a, b) {
+  return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
 }
 
 function cloneAgents(agents) {
@@ -55,6 +60,7 @@ export function applyAttack(agents, agentId, targetId, grudges) {
   const agent = next.find((a) => a.id === agentId);
   const target = next.find((a) => a.id === targetId);
   if (!target || !target.alive) return { agents: next, grudges };
+  if (manhattan(agent.pos, target.pos) > ATTACK_RANGE) return { agents: next, grudges };
 
   let damage = rand(8, 30);
   if (agent.weaponBuff) {
@@ -124,6 +130,7 @@ export function applyBetray(agents, agentId, targetId, grudges) {
   const agent = next.find((a) => a.id === agentId);
   const target = next.find((a) => a.id === targetId);
   if (!target || !target.alive || !agent.alliances.includes(targetId)) return { agents: next, grudges };
+  if (manhattan(agent.pos, target.pos) > ATTACK_RANGE) return { agents: next, grudges };
 
   const damage = rand(15, 35);
   target.hp = Math.max(0, target.hp - damage);
@@ -172,7 +179,7 @@ function nearestArtifact(agent, artifacts) {
   let bestDist = Infinity;
   for (const a of artifacts) {
     if (!a.active) continue;
-    const dist = Math.abs(a.pos[0] - agent.pos[0]) + Math.abs(a.pos[1] - agent.pos[1]);
+    const dist = manhattan(agent.pos, a.pos);
     if (dist < bestDist) {
       best = a;
       bestDist = dist;
@@ -193,8 +200,13 @@ export function pickRandomAction(agent, agents, artifacts) {
     return { type: 'MOVE', direction: moveToward(agent.pos, closestArtifact.pos) };
   }
 
+  const inRange = alive.filter((a) => manhattan(agent.pos, a.pos) <= ATTACK_RANGE);
+
   if (agent.alliances.length > 0 && Math.random() < 0.15) {
-    return { type: 'BETRAY', target: agent.alliances[0] };
+    const ally = agents.find((a) => a.id === agent.alliances[0]);
+    if (ally && manhattan(agent.pos, ally.pos) <= ATTACK_RANGE) {
+      return { type: 'BETRAY', target: agent.alliances[0] };
+    }
   }
 
   const proposer = alive.find((a) => a.pendingAlly === agent.id);
@@ -207,18 +219,18 @@ export function pickRandomAction(agent, agents, artifacts) {
     }
   }
 
-  if (Math.random() < 0.45) {
-    const nonAllies = alive.filter((a) => !agent.alliances.includes(a.id));
-    const targets = nonAllies.length > 0 ? nonAllies : alive;
+  if (inRange.length > 0 && Math.random() < 0.45) {
+    const nonAllies = inRange.filter((a) => !agent.alliances.includes(a.id));
+    const targets = nonAllies.length > 0 ? nonAllies : inRange;
     return { type: 'ATTACK', target: targets[rand(0, targets.length - 1)].id };
   }
 
   const nearest = alive.reduce((best, a) => {
-    const dist = Math.abs(a.pos[0] - agent.pos[0]) + Math.abs(a.pos[1] - agent.pos[1]);
+    const dist = manhattan(agent.pos, a.pos);
     return dist < best.dist ? { id: a.id, pos: a.pos, dist } : best;
   }, { dist: Infinity });
 
-  if (nearest.dist > 2) {
+  if (nearest.dist > 1) {
     return { type: 'MOVE', direction: moveToward(agent.pos, nearest.pos) };
   }
 

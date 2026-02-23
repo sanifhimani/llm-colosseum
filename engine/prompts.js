@@ -12,9 +12,13 @@ export function buildPrompt(state, agent, memories = []) {
     .map((id) => state.agents.find((a) => a.id === id)?.name)
     .filter(Boolean);
 
+  const attackRange = rules.attackRange || 3;
+
   const opponentLines = others.map((o) => {
+    const dist = Math.abs(agent.pos[0] - o.pos[0]) + Math.abs(agent.pos[1] - o.pos[1]);
     const allyTag = agent.alliances.includes(o.id) ? ' ALLY' : '';
-    return `- ${o.name}: HP:${o.hp} POS:[${o.pos}] TRUST:${o.trust}${allyTag}`;
+    const rangeTag = dist <= attackRange ? ' IN-RANGE' : '';
+    return `- ${o.name}: HP:${o.hp} POS:[${o.pos}] DIST:${dist} TRUST:${o.trust}${allyTag}${rangeTag}`;
   });
 
   const activeArtifacts = artifacts.filter((a) => a.active);
@@ -36,12 +40,12 @@ export function buildPrompt(state, agent, memories = []) {
     if (from === agent.id && toName) grudgesFrom.push(`${toName} ${count}x`);
   }
 
-  const actionChoices = buildActionChoices(agent, others, activeArtifacts);
+  const actionChoices = buildActionChoices(agent, others, activeArtifacts, attackRange);
 
   return [
     `ARENA BATTLE - You are ${agent.name}. Pick ONE action.`,
     '',
-    `STATE: HP:${agent.hp}/${agent.maxHp} POS:[${agent.pos}] TRUST:${agent.trust}`,
+    `STATE: HP:${agent.hp}/${agent.maxHp} POS:[${agent.pos}] TRUST:${agent.trust} RANGE:${attackRange}`,
     `ALLIES: ${allyNames.length > 0 ? allyNames.join(', ') : 'none'}`,
     'OPPONENTS:',
     ...opponentLines,
@@ -62,12 +66,16 @@ export function buildPrompt(state, agent, memories = []) {
   ].join('\n');
 }
 
-function buildActionChoices(agent, others, activeArtifacts) {
+function buildActionChoices(agent, others, activeArtifacts, attackRange) {
   const parts = ['MOVE N/S/E/W'];
 
-  const otherNames = others.map((o) => o.name);
-  if (otherNames.length > 0) {
-    parts.push(`ATTACK ${otherNames.join('/')}`);
+  const inRange = others.filter((o) => {
+    const dist = Math.abs(agent.pos[0] - o.pos[0]) + Math.abs(agent.pos[1] - o.pos[1]);
+    return dist <= attackRange;
+  });
+
+  if (inRange.length > 0) {
+    parts.push(`ATTACK ${inRange.map((o) => o.name).join('/')}`);
   }
 
   const nonAllies = others.filter((o) => !agent.alliances.includes(o.id));
@@ -75,9 +83,13 @@ function buildActionChoices(agent, others, activeArtifacts) {
     parts.push(`ALLY ${nonAllies.map((o) => o.name).join('/')}`);
   }
 
-  const allies = others.filter((o) => agent.alliances.includes(o.id));
-  if (allies.length > 0) {
-    parts.push(`BETRAY ${allies.map((o) => o.name).join('/')}`);
+  const alliesInRange = others.filter((o) => {
+    if (!agent.alliances.includes(o.id)) return false;
+    const dist = Math.abs(agent.pos[0] - o.pos[0]) + Math.abs(agent.pos[1] - o.pos[1]);
+    return dist <= attackRange;
+  });
+  if (alliesInRange.length > 0) {
+    parts.push(`BETRAY ${alliesInRange.map((o) => o.name).join('/')}`);
   }
 
   if (activeArtifacts.length > 0) {
@@ -151,6 +163,9 @@ export function resolveAction(parsed, state, agent) {
     case 'ATTACK': {
       const targetId = nameToId[parsed.target];
       if (!targetId || !others.some((a) => a.id === targetId)) return null;
+      const target = state.agents.find((a) => a.id === targetId);
+      const dist = Math.abs(agent.pos[0] - target.pos[0]) + Math.abs(agent.pos[1] - target.pos[1]);
+      if (dist > (state.rules.attackRange || 3)) return null;
       return { type: 'ATTACK', target: targetId };
     }
 
@@ -164,6 +179,9 @@ export function resolveAction(parsed, state, agent) {
     case 'BETRAY': {
       const targetId = nameToId[parsed.target];
       if (!targetId || !agent.alliances.includes(targetId)) return null;
+      const target = state.agents.find((a) => a.id === targetId);
+      const dist = Math.abs(agent.pos[0] - target.pos[0]) + Math.abs(agent.pos[1] - target.pos[1]);
+      if (dist > (state.rules.attackRange || 3)) return null;
       return { type: 'BETRAY', target: targetId };
     }
 

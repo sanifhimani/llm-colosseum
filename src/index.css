@@ -134,6 +134,14 @@ body::after {
   letter-spacing: 1px;
 }
 
+.demo-pill {
+  background: var(--color-dim);
+  color: #fff;
+  padding: 4px 8px;
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+
 .timer-big {
   font-size: clamp(12px, 2.5vw, 20px);
   color: var(--color-green);

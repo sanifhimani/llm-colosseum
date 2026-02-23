@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import TitleBar from './components/TitleBar';
 import ArenaCanvas from './components/ArenaCanvas';
 import FightersPanel from './components/FightersPanel';
@@ -9,16 +9,33 @@ import DialogueBox from './components/DialogueBox';
 import DamageFloat from './components/DamageFloat';
 import useGameState from './hooks/useGameState';
 import useSimulation from './hooks/useSimulation';
+import useBattleSocket from './hooks/useBattleSocket';
+
+const WS_URL = import.meta.env.VITE_WS_URL ||
+  `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/battle`;
+
+function useMode() {
+  return useMemo(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('mode') === 'demo' ? 'demo' : 'live';
+  }, []);
+}
 
 function App() {
+  const mode = useMode();
   const game = useGameState();
-  const { start } = useSimulation(game);
 
-  useEffect(() => { start(); }, [start]);
+  const { start } = useSimulation(game);
+  const isDev = import.meta.env.DEV;
+  useBattleSocket(game, mode === 'live' ? WS_URL : null, { autoTrigger: isDev });
+
+  useEffect(() => {
+    if (mode === 'demo') start();
+  }, [mode, start]);
 
   return (
     <div className="screen">
-      <TitleBar />
+      <TitleBar mode={mode} />
 
       <div className="main-area">
         <FightersPanel agents={game.agents} />

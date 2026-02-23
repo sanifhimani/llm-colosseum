@@ -7,6 +7,7 @@ import GrudgeMap from './components/GrudgeMap';
 import ZonePanel from './components/ZonePanel';
 import DialogueBox from './components/DialogueBox';
 import DamageFloat from './components/DamageFloat';
+import VictoryScreen from './components/VictoryScreen';
 import useGameState from './hooks/useGameState';
 import useSimulation from './hooks/useSimulation';
 import useBattleSocket from './hooks/useBattleSocket';
@@ -26,8 +27,7 @@ function App() {
   const game = useGameState();
 
   const { start } = useSimulation(game);
-  const isDev = import.meta.env.DEV;
-  useBattleSocket(game, mode === 'live' ? WS_URL : null, { autoTrigger: isDev });
+  useBattleSocket(game, mode === 'live' ? WS_URL : null);
 
   useEffect(() => {
     if (mode === 'demo') start();
@@ -35,13 +35,13 @@ function App() {
 
   return (
     <div className="screen">
-      <TitleBar mode={mode} />
+      <TitleBar battleActive={game.turn > 0 && !game.victory} />
 
       <div className="main-area">
         <FightersPanel agents={game.agents} />
 
         <div className="arena-col">
-          <ArenaCanvas agents={game.agents} artifacts={game.artifacts} zoneRadius={game.zoneRadius}>
+          <ArenaCanvas agents={game.agents} artifacts={game.artifacts} zoneRadius={game.zoneRadius} active={game.turn > 0 && !game.victory}>
             <DamageFloat events={game.events} agents={game.agents} />
           </ArenaCanvas>
           <DialogueBox events={game.events} agents={game.agents} turn={game.turn} />
@@ -53,6 +53,13 @@ function App() {
           <BattleLog events={game.events} />
         </div>
       </div>
+
+      {game.victory && (
+        <VictoryScreen
+          stats={game.victory}
+          onDismiss={game.reset}
+        />
+      )}
     </div>
   );
 }

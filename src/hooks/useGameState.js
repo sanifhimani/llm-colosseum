@@ -2,54 +2,93 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { GRID_SIZE } from '../state/constants';
 import { createAgents } from '../state/roster';
 import { createArtifacts } from '../state/artifacts';
+import { extractBattleStats } from '../utils/battleStats';
 
-const STORAGE_KEY = 'llm-colosseum-events';
+const STORAGE_KEY = 'llm-colosseum-state';
 
 function createInitialState() {
-  const events = loadEvents();
-  const maxId = events.reduce((max, e) => Math.max(max, e.id || 0), 0);
+  const saved = loadSaved();
   return {
     agents: createAgents(),
     artifacts: createArtifacts(),
     zoneRadius: GRID_SIZE / 2,
     turn: 0,
     grudges: {},
-    events,
-    eventSeq: maxId,
+    events: saved.events,
+    eventSeq: saved.eventSeq,
+    victory: saved.victory,
   };
 }
 
-function loadEvents() {
+function loadSaved() {
+  const empty = { events: [], eventSeq: 0, victory: null };
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    return JSON.parse(raw);
+    if (!raw) return empty;
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed.events)) return empty;
+    const hasVictory = parsed.events.some((e) => e.type === 'victory');
+    if (hasVictory) return empty;
+    return {
+      events: parsed.events,
+      eventSeq: parsed.eventSeq || 0,
+      victory: null,
+    };
   } catch {
-    return [];
+    return empty;
   }
 }
 
-function saveEvents(events) {
+function persist(state) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
-  } catch {
-    // storage full or unavailable
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      events: state.events,
+      eventSeq: state.eventSeq,
+      victory: state.victory,
+    }));
+  } catch {}
+}
+
+function deriveVictory(next) {
+  if (next.victory || next.turn === 0) return;
+  const alive = next.agents.filter((a) => a.alive);
+  if (alive.length > 1) return;
+  const stats = extractBattleStats(next.events);
+  if (stats.winner) {
+    next.victory = stats;
+    return;
   }
+  const sole = alive[0];
+  if (!sole) return;
+  next.victory = {
+    winner: { id: sole.id, turn: next.turn },
+    victoryEventId: null,
+    eliminations: [],
+    totalTurns: next.turn,
+    totalKills: 0,
+    totalBetrayals: 0,
+    totalAlliances: 0,
+    totalArtifacts: 0,
+  };
 }
 
 export default function useGameState() {
   const [state, setState] = useState(createInitialState);
-  const prevEventsRef = useRef(state.events);
+  const prevRef = useRef({ events: state.events, victory: state.victory });
 
   useEffect(() => {
-    if (state.events !== prevEventsRef.current) {
-      prevEventsRef.current = state.events;
-      saveEvents(state.events);
+    if (state.events !== prevRef.current.events || state.victory !== prevRef.current.victory) {
+      prevRef.current = { events: state.events, victory: state.victory };
+      persist(state);
     }
-  }, [state.events]);
+  }, [state]);
 
   const update = useCallback((patch) => {
-    setState((prev) => (typeof patch === 'function' ? patch(prev) : { ...prev, ...patch }));
+    setState((prev) => {
+      const next = typeof patch === 'function' ? patch(prev) : { ...prev, ...patch };
+      deriveVictory(next);
+      return next;
+    });
   }, []);
 
   const reset = useCallback(() => {

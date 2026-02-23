@@ -3,27 +3,30 @@ import { GRID_SIZE } from '../state/constants';
 
 const FLOAT_DURATION = 1200;
 
+function getLastEventId(events) {
+  return events.length > 0 ? events[events.length - 1].id : 0;
+}
+
 export default function DamageFloat({ events, agents }) {
   const containerRef = useRef(null);
-  const lastIndexRef = useRef(0);
+  const lastSeenIdRef = useRef(getLastEventId(events));
   const agentsRef = useRef(agents);
-  const timersRef = useRef([]);
+  const timersRef = useRef(new Set());
 
   useEffect(() => {
     agentsRef.current = agents;
   }, [agents]);
 
   useEffect(() => {
-    if (events.length === 0) { lastIndexRef.current = 0; return; }
-    if (events.length <= lastIndexRef.current) return;
     const container = containerRef.current;
-    if (!container) return;
+    if (!container || events.length === 0) return;
 
-    const startIdx = lastIndexRef.current;
-    lastIndexRef.current = events.length;
+    const cutoff = lastSeenIdRef.current;
+    lastSeenIdRef.current = getLastEventId(events);
 
-    for (let i = startIdx; i < events.length; i++) {
+    for (let i = events.length - 1; i >= 0; i--) {
       const event = events[i];
+      if (event.id <= cutoff) break;
       if (!event.damage || !event.target) continue;
       const target = agentsRef.current.find((a) => a.id === event.target);
       if (!target) continue;
@@ -39,15 +42,15 @@ export default function DamageFloat({ events, agents }) {
 
       const timerId = setTimeout(() => {
         el.remove();
-        timersRef.current = timersRef.current.filter((id) => id !== timerId);
+        timersRef.current.delete(timerId);
       }, FLOAT_DURATION);
-      timersRef.current.push(timerId);
+      timersRef.current.add(timerId);
     }
   }, [events]);
 
   useEffect(() => () => {
     timersRef.current.forEach(clearTimeout);
-    timersRef.current = [];
+    timersRef.current.clear();
     const container = containerRef.current;
     if (container) container.innerHTML = '';
   }, []);

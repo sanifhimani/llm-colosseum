@@ -7,7 +7,37 @@ import { drawArtifacts } from '../canvas/artifacts';
 import { drawAlliances } from '../canvas/alliances';
 import { drawAgent, drawDead, drawNametags } from '../canvas/agents';
 
-export default function ArenaCanvas({ agents = [], artifacts = [], zoneRadius, children }) {
+function renderFrame(ctx, data) {
+  const now = Date.now();
+  const { agents, artifacts, zoneRadius } = data;
+
+  ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+  drawFloor(ctx);
+
+  if (zoneRadius != null) {
+    drawZone(ctx, zoneRadius, now);
+  }
+
+  if (artifacts.length > 0) {
+    drawArtifacts(ctx, artifacts, now);
+  }
+
+  drawWalls(ctx, now);
+
+  if (agents.length > 0) {
+    drawAlliances(ctx, agents);
+    for (const agent of agents) {
+      if (agent.alive) {
+        drawAgent(ctx, agent);
+      } else {
+        drawDead(ctx, agent);
+      }
+    }
+    drawNametags(ctx, agents);
+  }
+}
+
+export default function ArenaCanvas({ agents = [], artifacts = [], zoneRadius, active, children }) {
   const canvasRef = useRef(null);
   const frameRef = useRef(null);
   const dataRef = useRef({ agents, artifacts, zoneRadius });
@@ -19,48 +49,28 @@ export default function ArenaCanvas({ agents = [], artifacts = [], zoneRadius, c
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = false;
 
-    function render() {
-      const now = Date.now();
-      const { agents, artifacts, zoneRadius } = dataRef.current;
-
-      ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-      drawFloor(ctx);
-
-      if (zoneRadius != null) {
-        drawZone(ctx, zoneRadius, now);
-      }
-
-      if (artifacts.length > 0) {
-        drawArtifacts(ctx, artifacts, now);
-      }
-
-      drawWalls(ctx, now);
-
-      if (agents.length > 0) {
-        drawAlliances(ctx, agents);
-        for (const agent of agents) {
-          if (agent.alive) {
-            drawAgent(ctx, agent);
-          } else {
-            drawDead(ctx, agent);
-          }
-        }
-        drawNametags(ctx, agents);
-      }
-
-      frameRef.current = requestAnimationFrame(render);
+    if (!active) {
+      renderFrame(ctx, dataRef.current);
+      return;
     }
 
-    render();
+    function loop() {
+      renderFrame(ctx, dataRef.current);
+      frameRef.current = requestAnimationFrame(loop);
+    }
+
+    loop();
 
     return () => {
-      if (frameRef.current) cancelAnimationFrame(frameRef.current);
+      if (frameRef.current) {
+        cancelAnimationFrame(frameRef.current);
+        frameRef.current = null;
+      }
     };
-  }, []);
+  }, [active, agents, artifacts, zoneRadius]);
 
   return (
     <div className="arena-wrap pbox" style={{ padding: 0, overflow: 'hidden' }}>

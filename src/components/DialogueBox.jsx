@@ -2,6 +2,10 @@ import { memo, useRef, useEffect, useState } from 'react';
 import { drawAgentSprite } from '../utils/sprites';
 import { formatEvent } from '../utils/events';
 
+function getLastEventId(events) {
+  return events.length > 0 ? events[events.length - 1].id : 0;
+}
+
 const Portrait = memo(function Portrait({ agentId, color }) {
   const canvasRef = useRef(null);
 
@@ -26,11 +30,23 @@ const Portrait = memo(function Portrait({ agentId, color }) {
 
 export default function DialogueBox({ events, agents, turn }) {
   const [displayed, setDisplayed] = useState('');
+  const [activeEvent, setActiveEvent] = useState(null);
+  const baselineIdRef = useRef(getLastEventId(events));
+
   const lastEvent = events.length > 0 ? events[events.length - 1] : null;
-  const lastEventId = lastEvent?.id ?? 0;
+  const isNew = lastEvent && lastEvent.id > baselineIdRef.current;
 
   useEffect(() => {
-    if (!lastEvent) return;
+    if (events.length === 0) {
+      baselineIdRef.current = 0;
+      setActiveEvent(null);
+      setDisplayed('');
+    }
+  }, [events.length]);
+
+  useEffect(() => {
+    if (!isNew || !lastEvent) return;
+    setActiveEvent(lastEvent);
     const { msg } = formatEvent(lastEvent);
     setDisplayed('');
     let i = 0;
@@ -40,9 +56,9 @@ export default function DialogueBox({ events, agents, turn }) {
       if (i >= msg.length) clearInterval(interval);
     }, 30);
     return () => clearInterval(interval);
-  }, [lastEventId, lastEvent]);
+  }, [lastEvent?.id, isNew, lastEvent]);
 
-  const agent = lastEvent?.agent ? agents.find((a) => a.id === lastEvent.agent) : null;
+  const agent = activeEvent?.agent ? agents.find((a) => a.id === activeEvent.agent) : null;
 
   return (
     <div className="pbox dialogue-box">

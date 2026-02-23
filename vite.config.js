@@ -5,6 +5,9 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
+    watch: {
+      ignored: ['**/data/**', '**/engine/**'],
+    },
     proxy: {
       '/ws/battle': {
         target: 'ws://localhost:8080',

@@ -1,6 +1,7 @@
 import { useRef, useCallback, useEffect } from 'react';
 import { ROSTER } from '../state/roster';
 import { ARTIFACT_TYPES } from '../state/artifacts';
+import { extractBattleStats } from '../utils/battleStats';
 
 const MAX_EVENTS = 500;
 const RECONNECT_MS = 3000;
@@ -38,10 +39,13 @@ function mapStateSnapshot(snapshot) {
   };
 }
 
-export default function useBattleSocket({ update }, wsUrl, { autoTrigger = false } = {}) {
+function truncateEvents(events) {
+  return events.length > MAX_EVENTS ? events.slice(-MAX_EVENTS) : events;
+}
+
+export default function useBattleSocket({ update }, wsUrl) {
   const wsRef = useRef(null);
   const reconnectRef = useRef(null);
-  const triggeredRef = useRef(false);
   const statusRef = useRef('disconnected');
   const urlRef = useRef(wsUrl);
   urlRef.current = wsUrl;
@@ -56,36 +60,43 @@ export default function useBattleSocket({ update }, wsUrl, { autoTrigger = false
       return {
         ...prev,
         eventSeq: seq,
-        events: [...prev.events.slice(-MAX_EVENTS), ...mapped],
+        events: truncateEvents([...prev.events, ...mapped]),
       };
     });
   }, [update]);
 
   const handleMessage = useCallback((data) => {
-    if (data.type === 'status' && data.status === 'idle') {
-      statusRef.current = 'idle';
-      if (autoTrigger && !triggeredRef.current) {
-        triggeredRef.current = true;
-        fetch('/api/trigger', { method: 'POST' }).catch(() => {});
-      }
+    if (data.type === 'status') {
+      statusRef.current = data.status;
       return;
     }
 
-    if (data.type === 'state' || data.type === 'battle_start') {
+    if (data.type === 'state') {
       statusRef.current = 'live';
       const mapped = mapStateSnapshot(data.state);
       update((prev) => ({ ...prev, ...mapped }));
+      return;
+    }
+
+    if (data.type === 'battle_start') {
+      statusRef.current = 'live';
+      const mapped = mapStateSnapshot(data.state);
+      update((prev) => ({ ...prev, ...mapped, events: [], eventSeq: 0, victory: null }));
       return;
     }
 
     if (data.type === 'turn') {
       statusRef.current = 'live';
       const mapped = mapStateSnapshot(data.state);
-      update((prev) => ({ ...prev, ...mapped }));
-
-      if (data.event) {
-        pushEvents([{ ...data.event, turn: data.turn }]);
-      }
+      update((prev) => {
+        const next = { ...prev, ...mapped };
+        if (data.event) {
+          const seq = next.eventSeq + 1;
+          next.eventSeq = seq;
+          next.events = truncateEvents([...next.events, { id: seq, ...data.event, turn: data.turn }]);
+        }
+        return next;
+      });
       return;
     }
 
@@ -101,13 +112,20 @@ export default function useBattleSocket({ update }, wsUrl, { autoTrigger = false
 
     if (data.type === 'battle_end') {
       statusRef.current = 'idle';
-      if (data.state) {
-        const mapped = mapStateSnapshot(data.state);
-        update((prev) => ({ ...prev, ...mapped }));
-      }
-      if (data.winner) {
-        pushEvents([{ type: 'victory', agent: data.winner.id, turn: data.turns }]);
-      }
+      update((prev) => {
+        const next = { ...prev };
+        if (data.state) {
+          Object.assign(next, mapStateSnapshot(data.state));
+        }
+        if (data.winner) {
+          const seq = next.eventSeq + 1;
+          const victoryEvent = { id: seq, type: 'victory', agent: data.winner.id, turn: data.turns };
+          next.eventSeq = seq;
+          next.events = truncateEvents([...next.events, victoryEvent]);
+          next.victory = extractBattleStats(next.events);
+        }
+        return next;
+      });
       return;
     }
   }, [update, pushEvents]);
@@ -127,7 +145,6 @@ export default function useBattleSocket({ update }, wsUrl, { autoTrigger = false
       try {
         handleMessage(JSON.parse(e.data));
       } catch {
-        // malformed message
       }
     };
 

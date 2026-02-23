@@ -1,6 +1,7 @@
 import { useRef, useCallback, useEffect } from 'react';
 import { applyMove, applyAttack, applyAlly, applyBetray, applyUseArtifact, pickRandomAction } from '../simulation/actions';
 import { checkZoneShrink, applyZoneDamage } from '../simulation/zone';
+import { extractBattleStats } from '../utils/battleStats';
 
 const TICK_MS = 800;
 const MAX_EVENTS = 500;
@@ -24,11 +25,13 @@ function computeTick(prev) {
 
   if (alive.length <= 1) {
     const winner = alive[0];
-    if (winner && !events.some((e) => e.type === 'victory')) {
+    if (winner && !prev.victory) {
+      const newEvents = [...events.slice(-MAX_EVENTS), { id: eventSeq + 1, turn, type: 'victory', agent: winner.id }];
       return {
         ...prev,
         eventSeq: eventSeq + 1,
-        events: [...events.slice(-MAX_EVENTS), { id: eventSeq + 1, turn, type: 'victory', agent: winner.id }],
+        events: newEvents,
+        victory: extractBattleStats(newEvents),
       };
     }
     return prev;
@@ -64,7 +67,8 @@ function computeTick(prev) {
     newEvents.push({ id: eventSeq, turn: newTurn, type: 'victory', agent: finalAlive[0].id });
   }
 
-  return {
+  const allEvents = [...events.slice(-MAX_EVENTS), ...newEvents];
+  const nextState = {
     ...prev,
     agents: finalAgents,
     artifacts: newArtifacts,
@@ -72,12 +76,19 @@ function computeTick(prev) {
     zoneRadius: newZoneRadius,
     turn: newTurn,
     eventSeq,
-    events: [...events.slice(-MAX_EVENTS), ...newEvents],
+    events: allEvents,
   };
+
+  if (finalAlive.length === 1) {
+    nextState.victory = extractBattleStats(allEvents);
+  }
+
+  return nextState;
 }
 
 export default function useSimulation({ agents, update }) {
   const intervalRef = useRef(null);
+  const doneRef = useRef(false);
 
   const tick = useCallback(() => {
     update(computeTick);
@@ -91,6 +102,7 @@ export default function useSimulation({ agents, update }) {
   }, []);
 
   const start = useCallback(() => {
+    if (doneRef.current) return;
     stop();
     intervalRef.current = setInterval(tick, TICK_MS);
   }, [tick, stop]);
@@ -98,10 +110,10 @@ export default function useSimulation({ agents, update }) {
   useEffect(() => {
     const alive = agents.filter((a) => a.alive);
     if (alive.length <= 1 && intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
+      doneRef.current = true;
+      stop();
     }
-  }, [agents]);
+  }, [agents, stop]);
 
   useEffect(() => () => stop(), [stop]);
 

@@ -1015,3 +1015,145 @@ body::after {
   margin-top: 6px;
   letter-spacing: 1px;
 }
+
+.transcript-hero {
+  padding: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.transcript-meta {
+  color: var(--color-dim);
+  font-size: 7px;
+  letter-spacing: 1px;
+}
+
+.transcript-winner-label {
+  font-size: 8px;
+  color: var(--color-dim);
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+.transcript-winner-name {
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+
+.placement-list {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin: 16px 0;
+  font-size: 8px;
+  flex-wrap: wrap;
+}
+
+.placement-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.placement-num {
+  color: var(--color-dim);
+  font-size: 10px;
+}
+
+.placement-1 .placement-num {
+  color: var(--color-gold);
+}
+
+.transcript-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.turn-entry {
+  display: grid;
+  grid-template-columns: 50px 100px 1fr;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-border2);
+  font-size: 7px;
+  line-height: 2;
+}
+
+.turn-num {
+  color: var(--color-dim);
+  font-size: 8px;
+}
+
+.turn-agent {
+  font-size: 8px;
+}
+
+.turn-thinking {
+  color: var(--color-dim);
+  font-style: italic;
+  margin-bottom: 4px;
+}
+
+.turn-action-text {
+  color: var(--color-white);
+}
+
+.turn-event-kill {
+  color: var(--color-red);
+  font-size: 8px;
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
+.turn-event-betray {
+  color: var(--color-gold);
+  font-size: 8px;
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
+.turn-event-ally {
+  color: var(--color-green);
+  font-size: 8px;
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
+.turn-latency {
+  color: var(--color-dim);
+  font-size: 6px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  padding: 6px 10px;
+  background: var(--color-void);
+  color: var(--color-dim);
+  border: 2px solid var(--color-border2);
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+
+.filter-btn:hover {
+  border-color: var(--color-border);
+  color: var(--color-white);
+}
+
+.filter-btn.active {
+  color: var(--color-gold);
+  border-color: var(--color-border);
+  background: rgba(240, 192, 32, 0.05);
+}

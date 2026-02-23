@@ -199,7 +199,7 @@ export default function StandingsPage() {
       <div className="page-header">
         <h1 className="page-title">STANDINGS</h1>
         <p className="page-subtitle">
-          SEASON {standingsData.season} / {totalBattles} BATTLE{totalBattles !== 1 ? 'S' : ''} PLAYED
+          SEASON {standingsData.season} // {totalBattles} BATTLE{totalBattles !== 1 ? 'S' : ''} PLAYED
         </p>
       </div>
 

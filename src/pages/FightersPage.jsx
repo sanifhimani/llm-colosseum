@@ -38,7 +38,7 @@ export default function FightersPage() {
     <div className="page-content">
       <div className="page-header">
         <h1 className="page-title">FIGHTERS</h1>
-        <p className="page-subtitle">{agents.length} COMBATANTS / SEASON {season}</p>
+        <p className="page-subtitle">{agents.length} COMBATANTS // SEASON {season}</p>
       </div>
 
       <div className="fighters-grid">

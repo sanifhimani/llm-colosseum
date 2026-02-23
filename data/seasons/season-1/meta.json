@@ -44,8 +44,9 @@
     "attackDamageMax": 30,
     "betrayDamageMin": 15,
     "betrayDamageMax": 35,
+    "attackRange": 3,
     "zoneDamage": 5,
     "apiTimeoutMs": 15000,
-    "turnPauseMs": 3000
+    "turnPauseMs": 800
   }
 }

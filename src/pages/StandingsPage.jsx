@@ -146,17 +146,16 @@ export default function StandingsPage() {
   const { data: agentsData, loading: agentsLoading, error: agentsError } = useApi('/api/agents');
   const { data: standingsData, loading: standingsLoading, error: standingsError } = useApi('/api/standings');
 
-  const agents = agentsData?.agents ?? [];
   const totalBattles = standingsData?.totalBattles ?? 0;
   const headToHead = standingsData?.headToHead ?? {};
 
-  const sorted = useMemo(() =>
-    [...agents].sort((a, b) => {
+  const sorted = useMemo(() => {
+    const agents = agentsData?.agents ?? [];
+    return [...agents].sort((a, b) => {
       if (b.stats.wins !== a.stats.wins) return b.stats.wins - a.stats.wins;
       return a.stats.avgPlacement - b.stats.avgPlacement;
-    }),
-    [agents]
-  );
+    });
+  }, [agentsData]);
 
   const loading = agentsLoading || standingsLoading;
   const error = agentsError || standingsError;

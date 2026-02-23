@@ -6,6 +6,7 @@ import { buildPrompt, parseResponse, resolveAction } from './prompts.js';
 const STUNNED_THINKING = 'CONNECTION LOST...';
 const INVALID_THINKING = 'CONFUSED...';
 const MAX_CONSECUTIVE_FAILURES = 3;
+const MAX_RESPONSE_TOKENS = 150;
 
 export async function runBattle(meta, agents, { onEvent, turnPauseMs = 0 } = {}) {
   const state = createGameState(meta);
@@ -72,13 +73,19 @@ async function executeTurn(state, agent, agentInstance) {
   }
 
   const prompt = buildPrompt(state, agent);
+  const callOpts = {
+    timeout: state.rules.apiTimeoutMs,
+    maxTokens: MAX_RESPONSE_TOKENS,
+    state,
+    agent,
+  };
   let response;
 
   try {
-    response = await agentInstance.call(prompt, { state, agent });
+    response = await agentInstance.call(prompt, callOpts);
   } catch {
     try {
-      response = await agentInstance.call(prompt, { state, agent });
+      response = await agentInstance.call(prompt, callOpts);
     } catch {
       agent.consecutiveFailures++;
       if (agent.consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {

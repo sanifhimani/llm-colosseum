@@ -1,8 +1,10 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { loadSeasonMeta } from './game/state.js';
-import { MockAgent } from './agents/mock.js';
+import { createAgentsFromRoster } from './agents/factory.js';
 import { runBattle } from './battle.js';
+
+const useMock = process.env.USE_MOCK === 'true';
 
 const app = new Hono();
 const port = process.env.PORT || 8080;
@@ -57,7 +59,7 @@ function broadcast(event) {
 async function startBattle() {
   try {
     const meta = loadSeasonMeta(DATA_DIR);
-    const agents = meta.roster.map((entry) => new MockAgent(entry));
+    const agents = createAgentsFromRoster(meta.roster, { useMock });
 
     activeBattle = { turn: 0, startedAt: new Date().toISOString() };
     lastBattleState = null;

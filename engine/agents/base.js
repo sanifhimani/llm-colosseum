@@ -6,7 +6,7 @@ export class BaseAgent {
     this.provider = config.provider;
   }
 
-  async call(prompt, options) {
+  async call(_prompt, _options) {
     throw new Error(`${this.constructor.name}.call() not implemented`);
   }
 }

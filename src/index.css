@@ -802,3 +802,216 @@ body::after {
 .h2h-loss {
   color: var(--color-red);
 }
+
+.fighters-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.fcard {
+  padding: 16px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  text-decoration: none;
+  color: inherit;
+}
+
+.fcard:hover {
+  border-color: var(--color-gold);
+}
+
+.fcard-sprite {
+  width: 48px;
+  height: 48px;
+  background: var(--color-void);
+  border: 2px solid var(--color-border2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+  image-rendering: pixelated;
+}
+
+.fcard-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.fcard-name {
+  font-size: 11px;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+.fcard-model {
+  color: var(--color-dim);
+  font-size: 7px;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.fcard-stats {
+  display: flex;
+  gap: 12px;
+  font-size: 7px;
+}
+
+.fcard-stat-label {
+  color: var(--color-dim);
+  font-size: 6px;
+  display: block;
+  margin-top: 2px;
+}
+
+.fcard-arrow {
+  color: var(--color-dim);
+  font-size: 10px;
+  align-self: center;
+}
+
+.profile-header {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.profile-sprite {
+  width: 72px;
+  height: 72px;
+  background: var(--color-void);
+  border: 3px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  flex-shrink: 0;
+  image-rendering: pixelated;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-name {
+  font-size: 16px;
+  letter-spacing: 3px;
+}
+
+.profile-model {
+  color: var(--color-dim);
+  font-size: 8px;
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+
+.profile-record {
+  margin-top: 8px;
+  font-size: 10px;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.stat-box {
+  background: var(--color-void);
+  border: 1px solid var(--color-border2);
+  padding: 12px 8px;
+  text-align: center;
+}
+
+.stat-box-val {
+  font-size: 16px;
+  color: var(--color-white);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.stat-box-lbl {
+  font-size: 6px;
+  color: var(--color-dim);
+  letter-spacing: 1px;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.memory-entry {
+  padding: 8px;
+  border-bottom: 1px solid var(--color-border2);
+  font-size: 7px;
+  line-height: 2;
+}
+
+.memory-win {
+  border-left: 3px solid var(--color-green);
+  padding-left: 10px;
+}
+
+.memory-loss {
+  border-left: 3px solid var(--color-red);
+  padding-left: 10px;
+}
+
+.memory-day {
+  color: var(--color-gold);
+  font-size: 7px;
+}
+
+.memory-text {
+  color: var(--color-white);
+}
+
+.grudge-row,
+.trust-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border2);
+  font-size: 8px;
+}
+
+.section-empty {
+  font-size: 7px;
+  color: var(--color-dim);
+  padding: 8px 0;
+}
+
+.thinking-box {
+  background: var(--color-void);
+  border: 1px solid var(--color-border2);
+  padding: 12px;
+  font-size: 7px;
+  line-height: 2.2;
+  margin-bottom: 8px;
+  color: var(--color-white);
+}
+
+.thinking-turn {
+  color: var(--color-dim);
+  font-size: 6px;
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.thinking-action {
+  color: var(--color-gold);
+  font-size: 7px;
+  display: block;
+  margin-top: 6px;
+  letter-spacing: 1px;
+}

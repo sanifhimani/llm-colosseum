@@ -23,8 +23,17 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]', argsIgnorePattern: '^_' }],
       'no-empty': ['error', { allowEmptyCatch: true }],
+    },
+  },
+  {
+    files: ['engine/**/*.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        Bun: 'readonly',
+      },
     },
   },
 ])

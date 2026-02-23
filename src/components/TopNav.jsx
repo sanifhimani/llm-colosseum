@@ -19,17 +19,23 @@ function isLinkActive(to, pathname) {
   return pathname.startsWith(to);
 }
 
-export default function TopNav({ live = false }) {
+export default function TopNav({ live = false, simulating = false }) {
   const { pathname } = useLocation();
   const day = getDayNumber();
+
+  let centerEl;
+  if (simulating) {
+    centerEl = <span className="topnav-sim">SIMULATION</span>;
+  } else if (live) {
+    centerEl = <span className="topnav-live">{'\u25CF'} LIVE</span>;
+  } else {
+    centerEl = <span className="topnav-center">S1 // DAY {day}</span>;
+  }
 
   return (
     <nav className="topnav">
       <Link to="/" className="topnav-logo">{'\u2694'} LLM COLOSSEUM {'\u2694'}</Link>
-      {live
-        ? <span className="topnav-live">{'\u25CF'} LIVE</span>
-        : <span className="topnav-center">S1 // DAY {day}</span>
-      }
+      {centerEl}
       <div className="topnav-links">
         {NAV_LINKS.map(({ to, label }) => (
           <Link

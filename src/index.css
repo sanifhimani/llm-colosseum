@@ -37,7 +37,6 @@ html, body {
   color: var(--color-white);
   font-family: 'Press Start 2P', monospace;
   font-size: 10px;
-  overflow: hidden;
 }
 
 #root { height: 100%; }
@@ -94,33 +93,79 @@ body::after {
   outline-color: var(--color-void);
 }
 
-.screen {
-  padding: 12px;
+.app-shell {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   height: 100%;
 }
 
-.titlebar {
-  padding: 10px 16px;
+.topnav {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  position: relative;
-  gap: 12px;
-  flex-wrap: wrap;
+  gap: 16px;
+  padding: 0 16px;
+  height: 48px;
+  flex-shrink: 0;
+  background: var(--color-panel);
+  border-bottom: 2px solid var(--color-border2);
 }
 
-.title-logo {
-  font-size: clamp(10px, 2.5vw, 18px);
+.topnav-logo {
+  font-size: clamp(9px, 2vw, 14px);
   color: var(--color-gold);
-  text-shadow: 4px 4px 0 #804000, 2px 2px 0 #c07000;
+  text-shadow: 3px 3px 0 #804000, 1px 1px 0 #c07000;
   letter-spacing: 2px;
-  animation: title-flash 4s step-end infinite;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
-.live-pill {
+.topnav-links {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.topnav-link {
+  position: relative;
+  font-size: 9px;
+  color: var(--color-dim);
+  text-decoration: none;
+  padding: 14px 10px;
+  letter-spacing: 1px;
+  transition: color 0.15s;
+  white-space: nowrap;
+}
+
+.topnav-link:hover {
+  color: var(--color-white);
+}
+
+.topnav-link-active {
+  color: var(--color-gold);
+}
+
+.topnav-link-active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-gold);
+}
+
+.topnav-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 7px;
+  color: var(--color-dim);
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.topnav-live {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -128,14 +173,57 @@ body::after {
   color: #fff;
   padding: 4px 8px;
   font-size: 8px;
+  letter-spacing: 1px;
   animation: blink-bg 1s step-end infinite;
+}
+
+.arena-screen {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.page-content {
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+.page-header {
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 16px;
+  color: var(--color-gold);
+  letter-spacing: 3px;
+  text-shadow: 3px 3px 0 #804000;
+  margin-bottom: 8px;
+}
+
+.page-subtitle {
+  font-size: 9px;
+  color: var(--color-dim);
   letter-spacing: 1px;
 }
 
-.season-tag {
+.profile-back {
+  display: inline-block;
   font-size: 8px;
   color: var(--color-dim);
+  text-decoration: none;
   letter-spacing: 1px;
+  margin-bottom: 16px;
+  transition: color 0.15s;
+}
+
+.profile-back:hover {
+  color: var(--color-gold);
 }
 
 .main-area {
@@ -562,11 +650,6 @@ body::after {
 @keyframes victory-enter {
   from { opacity: 0; }
   to { opacity: 1; }
-}
-
-@keyframes title-flash {
-  0%, 90%, 100% { opacity: 1; }
-  92%, 98% { opacity: 0.2; }
 }
 
 @keyframes blink-bg {

@@ -1,13 +1,11 @@
 import { useEffect, useMemo } from 'react';
-import TitleBar from './components/TitleBar';
-import ArenaCanvas from './components/ArenaCanvas';
-import FightersPanel from './components/FightersPanel';
-import BattleLog from './components/BattleLog';
-import GrudgeMap from './components/GrudgeMap';
-import ZonePanel from './components/ZonePanel';
-import DialogueBox from './components/DialogueBox';
-import DamageFloat from './components/DamageFloat';
-import VictoryScreen from './components/VictoryScreen';
+import { useLocation, matchRoute } from './router';
+import TopNav from './components/TopNav';
+import ArenaPage from './pages/ArenaPage';
+import StandingsPage from './pages/StandingsPage';
+import FightersPage from './pages/FightersPage';
+import FighterProfilePage from './pages/FighterProfilePage';
+import LastBattlePage from './pages/LastBattlePage';
 import useGameState from './hooks/useGameState';
 import useSimulation from './hooks/useSimulation';
 import useBattleSocket from './hooks/useBattleSocket';
@@ -16,10 +14,24 @@ const WS_URL = import.meta.env.VITE_WS_URL ||
   `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/battle`;
 
 function useMode() {
+  const { search } = useLocation();
   return useMemo(() => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(search);
     return params.get('mode') === 'demo' ? 'demo' : 'live';
-  }, []);
+  }, [search]);
+}
+
+function PageRouter({ game }) {
+  const { pathname } = useLocation();
+
+  const fighterMatch = matchRoute('/fighters/:id', pathname);
+  if (fighterMatch) return <FighterProfilePage id={fighterMatch.id} />;
+
+  if (pathname === '/standings') return <StandingsPage />;
+  if (pathname === '/fighters') return <FightersPage />;
+  if (pathname === '/last-battle') return <LastBattlePage />;
+
+  return <ArenaPage game={game} />;
 }
 
 function App() {
@@ -34,32 +46,9 @@ function App() {
   }, [mode, start]);
 
   return (
-    <div className="screen">
-      <TitleBar battleActive={game.turn > 0 && !game.victory} />
-
-      <div className="main-area">
-        <FightersPanel agents={game.agents} />
-
-        <div className="arena-col">
-          <ArenaCanvas agents={game.agents} artifacts={game.artifacts} zoneRadius={game.zoneRadius} active={game.turn > 0 && !game.victory}>
-            <DamageFloat events={game.events} agents={game.agents} />
-          </ArenaCanvas>
-          <DialogueBox events={game.events} agents={game.agents} turn={game.turn} />
-        </div>
-
-        <div className="right-panels">
-          <ZonePanel zoneRadius={game.zoneRadius} turn={game.turn} artifacts={game.artifacts} />
-          <GrudgeMap grudges={game.grudges} />
-          <BattleLog events={game.events} />
-        </div>
-      </div>
-
-      {game.victory && (
-        <VictoryScreen
-          stats={game.victory}
-          onDismiss={game.reset}
-        />
-      )}
+    <div className="app-shell">
+      <TopNav live={game.turn > 0 && !game.victory} />
+      <PageRouter game={game} />
     </div>
   );
 }

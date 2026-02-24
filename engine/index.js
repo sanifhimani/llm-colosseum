@@ -3,7 +3,7 @@ import { cors } from 'hono/cors';
 import { loadSeasonMeta } from './game/state.js';
 import { createAgentsFromRoster } from './agents/factory.js';
 import { runBattle } from './battle.js';
-import { nextDayNumber, buildTranscript, writeTranscript, updateStandings, updateMemory } from './persistence.js';
+import { nextDayNumber, buildTranscript, writeTranscript, updateStandings, updateMemory, loadMemories, loadStandings } from './persistence.js';
 import { createDataRoutes } from './routes/data.js';
 import { startScheduler } from './scheduler.js';
 
@@ -64,6 +64,8 @@ async function startBattle() {
   try {
     const meta = loadSeasonMeta(DATA_DIR);
     const agents = createAgentsFromRoster(meta.roster, { useMock });
+    const memories = loadMemories(DATA_DIR, meta.season);
+    const standings = loadStandings(DATA_DIR, meta.season);
 
     activeBattle = { turn: 0, startedAt: new Date().toISOString() };
     lastBattleState = null;
@@ -71,10 +73,13 @@ async function startBattle() {
     const eventLog = [];
     const turnLog = [];
 
-    console.log('[battle] starting');
+    const memCount = Object.values(memories).reduce((sum, m) => sum + m.length, 0);
+    console.log(`[battle] starting (${useMock ? 'mock' : 'live'} agents, ${memCount} total memories loaded)`);
 
     const battleResult = await runBattle(meta, agents, {
       turnPauseMs: meta.rules.turnPauseMs || 0,
+      memories,
+      standings,
       onEvent(event) {
         if (event.turn !== undefined) {
           activeBattle.turn = event.turn;
@@ -112,7 +117,7 @@ async function startBattle() {
 
       for (const agent of battleResult.state.agents) {
         const won = winner && agent.id === winner.id;
-        updateMemory(DATA_DIR, meta.season, agent.id, day, won, battleResult.state);
+        updateMemory(DATA_DIR, meta.season, agent.id, day, won, battleResult.state, turnLog, eventLog);
       }
       console.log('[persist] memories updated');
     } catch (err) {
@@ -158,7 +163,7 @@ const server = Bun.serve({
   },
 });
 
-console.log(`[engine] listening on :${server.port}`);
+console.log(`[engine] listening on :${server.port} (${useMock ? 'MOCK' : 'LIVE'} mode)`);
 
 startScheduler(DATA_DIR, () => {
   if (!activeBattle) startBattle();

@@ -5,7 +5,7 @@ import AgentSprite from './AgentSprite';
 
 const AGENT_MAP = Object.fromEntries(ROSTER.map((r) => [r.id, r]));
 
-export default function VictoryScreen({ stats, onDismiss }) {
+export default function VictoryScreen({ stats, onDismiss, simulating = false }) {
   const [sharing, setSharing] = useState(false);
   const { winner, eliminations, totalTurns, totalBetrayals, totalAlliances, totalArtifacts } = stats;
 
@@ -84,11 +84,13 @@ export default function VictoryScreen({ stats, onDismiss }) {
         </div>
 
         <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
-          <button className="victory-btn" onClick={handleShare} disabled={sharing}>
-            {sharing ? 'SHARING...' : 'SHARE'}
-          </button>
+          {!simulating && (
+            <button className="victory-btn" onClick={handleShare} disabled={sharing}>
+              {sharing ? 'SHARING...' : 'SHARE'}
+            </button>
+          )}
           <button className="victory-btn victory-btn-dim" onClick={onDismiss}>
-            DISMISS
+            {simulating ? 'BACK' : 'DISMISS'}
           </button>
         </div>
       </div>

@@ -289,6 +289,12 @@ body::after {
   display: block;
 }
 
+.fighters-panel {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
 .fighters-list {
   overflow-y: auto;
   flex: 1;
@@ -676,6 +682,11 @@ body::after {
 @keyframes log-in {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+@keyframes countdown-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
 }
 
 @keyframes dmg-rise {
@@ -1194,6 +1205,10 @@ body::after {
   letter-spacing: 4px;
 }
 
+.countdown-loading {
+  animation: countdown-pulse 1.5s step-end infinite;
+}
+
 .countdown-label {
   font-size: 7px;
   color: var(--color-dim);
@@ -1298,4 +1313,288 @@ body::after {
   font-size: 7px;
   color: var(--color-dim);
   letter-spacing: 1px;
+}
+
+.topnav-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: auto;
+}
+
+.topnav-hamburger span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--color-white);
+}
+
+@media (max-width: 768px) {
+  .topnav-hamburger {
+    display: flex;
+  }
+
+  .topnav-links {
+    display: none;
+  }
+
+  .topnav-links-open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 48px;
+    left: 0;
+    right: 0;
+    background: var(--color-panel);
+    border-bottom: 2px solid var(--color-border2);
+    z-index: 100;
+  }
+
+  .topnav-logo {
+    font-size: 11px;
+  }
+
+  .topnav-center,
+  .topnav-live,
+  .topnav-sim {
+    display: none;
+  }
+
+  .main-area {
+    grid-template-columns: 1fr;
+    overflow: visible;
+    flex: none;
+  }
+
+  .main-area > .arena-col {
+    order: -1;
+  }
+
+  .arena-screen {
+    overflow-y: auto;
+  }
+
+  .arena-col {
+    overflow: visible;
+  }
+
+  .arena-wrap {
+    flex: none;
+  }
+
+  .fighters-panel {
+    overflow: visible;
+  }
+
+  .main-area > .pbox > .panel-title {
+    display: none;
+  }
+
+  .fighters-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    overflow: visible;
+  }
+
+  .fighter-card {
+    padding: 4px 6px;
+    border-bottom: none;
+  }
+
+  .fighter-trust {
+    display: none;
+  }
+
+  .fighter-allies {
+    display: none;
+  }
+
+  .fighter-name {
+    font-size: 7px;
+  }
+
+  .fighter-header {
+    gap: 4px;
+    margin-bottom: 2px;
+  }
+
+  .log-panel {
+    display: none;
+  }
+
+  .right-panels {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    overflow: visible;
+  }
+
+  .grudge-list {
+    max-height: 150px;
+  }
+
+  .panel-title {
+    font-size: 7px;
+    padding: 4px 6px;
+    letter-spacing: 1px;
+  }
+
+  .zone-stat {
+    font-size: 7px;
+  }
+
+  .zone-content {
+    padding: 4px;
+    gap: 2px;
+  }
+
+  .zone-artifacts {
+    font-size: 7px;
+  }
+
+  .zone-artifact-item {
+    font-size: 7px;
+  }
+
+  .grudge-entry {
+    font-size: 7px;
+  }
+
+  .grudge-list {
+    padding: 4px;
+  }
+
+  .idle-panel {
+    padding: 16px 12px;
+    gap: 10px;
+  }
+
+  .idle-title {
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+
+  .countdown {
+    font-size: 22px;
+    letter-spacing: 2px;
+  }
+
+  .countdown-label {
+    font-size: 6px;
+    margin-top: -4px;
+  }
+
+  .idle-roster {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 16px;
+    justify-items: center;
+  }
+
+  .idle-nav-cards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+  }
+
+  .idle-nav-card {
+    padding: 8px 4px;
+  }
+
+  .idle-nav-card-desc,
+  .idle-nav-card-icon {
+    display: none;
+  }
+
+  .idle-status {
+    font-size: 6px;
+  }
+
+  .fighters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .transcript-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .turn-entry {
+    grid-template-columns: 36px 70px 1fr;
+  }
+
+  .transcript-hero {
+    flex-direction: column;
+  }
+
+  .pbox:has(.standings-table),
+  .pbox:has(.h2h-grid) {
+    overflow-x: auto;
+  }
+
+  .page-content {
+    padding: 20px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .topnav {
+    padding: 0 8px;
+    gap: 8px;
+  }
+
+  .topnav-logo {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+
+  .arena-screen {
+    padding: 6px;
+  }
+
+  .dialogue-box {
+    padding: 6px 8px;
+    gap: 6px;
+    min-height: 36px;
+  }
+
+  .dialogue-text,
+  .dialogue-name {
+    font-size: 8px;
+  }
+
+  .page-title {
+    font-size: 12px;
+  }
+
+  .fcard {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .profile-sprite {
+    width: 56px;
+    height: 56px;
+    font-size: 28px;
+  }
+
+  .standings-table {
+    font-size: 7px;
+  }
+
+  .standings-table th,
+  .standings-table td {
+    padding: 4px 6px;
+  }
 }

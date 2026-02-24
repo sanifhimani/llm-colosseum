@@ -68,7 +68,7 @@ export default function IdleOverlay({ onSimulate, nextBattle }) {
       <div className="idle-panel pbox pbox-gold" onClick={(e) => e.stopPropagation()}>
         <div className="idle-title">NEXT BATTLE</div>
 
-        <div className="countdown">{countdown}</div>
+        <div className={`countdown${!targetMs ? ' countdown-loading' : ''}`}>{countdown}</div>
         <div className="countdown-label">HOURS : MINUTES : SECONDS</div>
 
         <FighterRoster agents={agents} />

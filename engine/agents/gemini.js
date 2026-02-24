@@ -7,11 +7,14 @@ export class GeminiAgent extends BaseAgent {
     this.client = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY);
   }
 
-  async call(prompt, { timeout = 15000, maxTokens = 150 } = {}) {
+  async call(prompt, { timeout = 15000 } = {}) {
     const start = Date.now();
     const model = this.client.getGenerativeModel({
       model: this.model,
-      generationConfig: { maxOutputTokens: maxTokens },
+      generationConfig: {
+        maxOutputTokens: 300,
+        thinkingConfig: { thinkingBudget: 128 },
+      },
     });
 
     const controller = new AbortController();

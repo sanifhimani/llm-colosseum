@@ -11,7 +11,7 @@ export class GPTAgent extends BaseAgent {
     const start = Date.now();
     const response = await this.client.chat.completions.create({
       model: this.model,
-      max_tokens: maxTokens,
+      max_completion_tokens: maxTokens,
       messages: [{ role: 'user', content: prompt }],
     }, { timeout });
 

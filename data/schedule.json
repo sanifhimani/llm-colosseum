@@ -1,7 +1,7 @@
 {
   "timezone": "America/New_York",
-  "weekday": "18:00",
-  "weekend": "14:00",
+  "weekday": "13:00",
+  "weekend": "13:00",
   "enabled": true,
   "currentSeason": 1
 }

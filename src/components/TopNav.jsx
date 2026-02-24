@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useLocation } from '../router';
 
 function getDayNumber() {
@@ -21,6 +22,7 @@ function isLinkActive(to, pathname) {
 
 export default function TopNav({ live = false, simulating = false }) {
   const { pathname } = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
   const day = getDayNumber();
 
   let centerEl;
@@ -36,12 +38,20 @@ export default function TopNav({ live = false, simulating = false }) {
     <nav className="topnav">
       <Link to="/" className="topnav-logo">{'\u2694'} LLM COLOSSEUM {'\u2694'}</Link>
       {centerEl}
-      <div className="topnav-links">
+      <button
+        className="topnav-hamburger"
+        onClick={() => setMenuOpen((v) => !v)}
+        aria-label="Toggle menu"
+      >
+        <span /><span /><span />
+      </button>
+      <div className={`topnav-links${menuOpen ? ' topnav-links-open' : ''}`}>
         {NAV_LINKS.map(({ to, label }) => (
           <Link
             key={to}
             to={to}
             className={`topnav-link${isLinkActive(to, pathname) ? ' topnav-link-active' : ''}`}
+            onClick={() => setMenuOpen(false)}
           >
             {label}
           </Link>

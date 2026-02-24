@@ -12,7 +12,7 @@ const STARTING_POSITIONS = {
 export const ROSTER = [
   { id: 'claude', name: 'CLAUDE', color: '#e07820', model: 'claude-sonnet-4-6' },
   { id: 'gpt', name: 'GPT', color: '#20c090', model: 'gpt-4.1' },
-  { id: 'gemini', name: 'GEMINI', color: '#4090f0', model: 'gemini-2.5-flash' },
+  { id: 'gemini', name: 'GEMINI', color: '#4090f0', model: 'gemini-3.1-pro-preview' },
   { id: 'grok', name: 'GROK', color: '#a0a0a8', model: 'grok-3' },
 ];
 

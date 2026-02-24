@@ -22,7 +22,7 @@ function useMode() {
   }, [search]);
 }
 
-function PageRouter({ game, onSimulate, onDismiss, nextBattle }) {
+function PageRouter({ game, onSimulate, onDismiss, nextBattle, simulating }) {
   const { pathname } = useLocation();
 
   const fighterMatch = matchRoute('/fighters/:id', pathname);
@@ -32,7 +32,7 @@ function PageRouter({ game, onSimulate, onDismiss, nextBattle }) {
   if (pathname === '/fighters') return <FightersPage />;
   if (pathname === '/last-battle') return <LastBattlePage />;
 
-  return <ArenaPage game={game} onSimulate={onSimulate} onDismiss={onDismiss} nextBattle={nextBattle} />;
+  return <ArenaPage game={game} onSimulate={onSimulate} onDismiss={onDismiss} nextBattle={nextBattle} simulating={simulating} />;
 }
 
 function App() {
@@ -67,7 +67,7 @@ function App() {
   return (
     <div className="app-shell">
       <TopNav live={!simulating && battleActive} simulating={simulating && battleActive} />
-      <PageRouter game={game} onSimulate={handleSimulate} onDismiss={handleDismiss} nextBattle={schedule.nextBattle} />
+      <PageRouter game={game} onSimulate={handleSimulate} onDismiss={handleDismiss} nextBattle={schedule.nextBattle} simulating={simulating} />
     </div>
   );
 }

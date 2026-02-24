@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from 
 import { resolve } from 'path';
 
 const MAX_MEMORIES = 10;
+const ROSTER_IDS = ['claude', 'gpt', 'gemini', 'grok'];
 
 export function seasonDir(dataDir, season = 1) {
   return resolve(dataDir, `seasons/season-${season}`);
@@ -14,6 +15,32 @@ export function nextDayNumber(dataDir, season = 1) {
   if (files.length === 0) return 1;
   const maxDay = Math.max(...files.map((f) => parseInt(f.replace('day-', '').replace('.json', ''), 10)));
   return maxDay + 1;
+}
+
+export function loadMemories(dataDir, season = 1) {
+  const memDir = resolve(seasonDir(dataDir, season), 'memories');
+  const memories = {};
+
+  for (const id of ROSTER_IDS) {
+    const filePath = resolve(memDir, `${id}.json`);
+    try {
+      const data = JSON.parse(readFileSync(filePath, 'utf-8'));
+      memories[id] = data.memories || [];
+    } catch {
+      memories[id] = [];
+    }
+  }
+
+  return memories;
+}
+
+export function loadStandings(dataDir, season = 1) {
+  const filePath = resolve(seasonDir(dataDir, season), 'standings.json');
+  try {
+    return JSON.parse(readFileSync(filePath, 'utf-8'));
+  } catch {
+    return null;
+  }
 }
 
 export function writeTranscript(dataDir, season, transcript) {
@@ -199,7 +226,7 @@ function updateHeadToHead(standings, eventLog) {
   }
 }
 
-export function updateMemory(dataDir, season, agentId, battleDay, won, state) {
+export function updateMemory(dataDir, season, agentId, battleDay, won, state, turnLog = [], eventLog = []) {
   const filePath = resolve(seasonDir(dataDir, season), 'memories', `${agentId}.json`);
   const memory = JSON.parse(readFileSync(filePath, 'utf-8'));
 
@@ -207,7 +234,7 @@ export function updateMemory(dataDir, season, agentId, battleDay, won, state) {
   if (won) memory.record.wins++;
   else memory.record.losses++;
 
-  const summary = generateMemorySummary(agentId, battleDay, won, state);
+  const summary = generateMemorySummary(agentId, battleDay, won, state, turnLog, eventLog);
   memory.memories.push(summary);
   if (memory.memories.length > MAX_MEMORIES) {
     memory.memories = [memory.memories[0], ...memory.memories.slice(-(MAX_MEMORIES - 1))];
@@ -232,21 +259,79 @@ export function updateMemory(dataDir, season, agentId, battleDay, won, state) {
   return memory;
 }
 
-function generateMemorySummary(agentId, day, won, state) {
+function generateMemorySummary(agentId, day, won, state, turnLog = [], eventLog = []) {
   const agent = state.agents.find((a) => a.id === agentId);
-  const result = won ? 'Won' : agent?.alive ? `Survived (${agent.hp} HP)` : 'Eliminated';
+  const nameMap = Object.fromEntries(state.agents.map((a) => [a.id, a.name]));
+  const result = won ? 'Won' : agent?.alive ? `Survived (${agent.hp} HP remaining)` : 'Eliminated';
+
+  let damageDealt = 0;
+  let damageTaken = 0;
+  const kills = [];
+  const betrayedBy = [];
+  const betrayed = [];
+  let killedBy = null;
+  let usedArtifact = false;
+
+  for (const t of turnLog) {
+    const ev = t.event;
+    if (!ev) continue;
+
+    if (t.agent === agentId) {
+      if (ev.type === 'attack' || ev.type === 'kill') damageDealt += ev.damage || 0;
+      if (ev.type === 'betray' || ev.type === 'betray_kill') {
+        damageDealt += ev.damage || 0;
+        betrayed.push(nameMap[ev.target]);
+      }
+      if (ev.type === 'kill' || ev.type === 'betray_kill') kills.push(nameMap[ev.target]);
+      if (ev.type === 'artifact') usedArtifact = true;
+    }
+
+    if (ev.target === agentId) {
+      if (ev.type === 'attack' || ev.type === 'kill') damageTaken += ev.damage || 0;
+      if (ev.type === 'betray' || ev.type === 'betray_kill') {
+        damageTaken += ev.damage || 0;
+        betrayedBy.push(nameMap[t.agent]);
+      }
+      if (ev.type === 'kill' || ev.type === 'betray_kill') killedBy = nameMap[t.agent];
+    }
+  }
+
+  let zoneDamage = 0;
+  for (const e of eventLog) {
+    if (e.type === 'zone_damage' && e.agent === agentId) {
+      zoneDamage += e.damage || 0;
+    }
+  }
 
   const allies = agent?.alliances || [];
-  const allyNames = allies.map((id) => state.agents.find((a) => a.id === id)?.name).filter(Boolean);
-
-  const fought = Object.keys(state.grudges)
-    .filter((key) => key.split('|')[0] === agentId)
-    .map((key) => state.agents.find((a) => a.id === key.split('|')[1])?.name)
-    .filter(Boolean);
+  const allyNames = allies.map((id) => nameMap[id]).filter(Boolean);
 
   const parts = [`Day ${day}: ${result}.`];
+
+  if (damageDealt > 0) parts.push(`Dealt ${damageDealt} total damage.`);
+  if (damageTaken > 0) parts.push(`Took ${damageTaken} damage from attacks.`);
+  if (zoneDamage > 0) parts.push(`Took ${zoneDamage} zone damage (stayed outside safe area).`);
+  if (kills.length > 0) parts.push(`Killed ${kills.join(', ')}.`);
+  if (killedBy) parts.push(`Killed by ${killedBy}.`);
   if (allyNames.length > 0) parts.push(`Allied with ${allyNames.join(', ')}.`);
-  if (fought.length > 0) parts.push(`Fought ${fought.join(', ')}.`);
+  if (betrayed.length > 0) parts.push(`Betrayed ${betrayed.join(', ')}.`);
+  if (betrayedBy.length > 0) parts.push(`Was betrayed by ${betrayedBy.join(', ')}.`);
+  if (usedArtifact) parts.push('Used an artifact.');
+
+  if (!won && !agent?.alive) {
+    if (zoneDamage > damageTaken && zoneDamage > 0) {
+      parts.push('Lesson: zone damage was the main killer, stay inside safe area.');
+    } else if (killedBy && betrayedBy.includes(killedBy)) {
+      parts.push(`Lesson: ${killedBy} cannot be trusted, betrayal was fatal.`);
+    } else if (damageDealt === 0) {
+      parts.push('Lesson: never engaged in combat, need to be more aggressive.');
+    }
+  }
+
+  if (won) {
+    if (kills.length > 0) parts.push('Strategy that worked: aggressive combat.');
+    if (allyNames.length > 0) parts.push('Strategy that worked: forming alliances for protection.');
+  }
 
   return parts.join(' ');
 }

@@ -1,5 +1,6 @@
 import { Link } from '../router';
 import useApi from '../hooks/useApi';
+import AgentSprite from '../components/AgentSprite';
 
 function getTrustColor(trust) {
   if (trust >= 50) return 'var(--color-green)';
@@ -46,8 +47,8 @@ export default function FightersPage() {
           const s = agent.stats;
           return (
             <Link key={agent.id} to={`/fighters/${agent.id}`} className="fcard pbox">
-              <div className="fcard-sprite" style={{ color: agent.color }}>
-                {agent.name.charAt(0)}
+              <div className="fcard-sprite">
+                <AgentSprite agentId={agent.id} color={agent.color} size={40} />
               </div>
               <div className="fcard-info">
                 <div className="fcard-name" style={{ color: agent.color }}>{agent.name}</div>

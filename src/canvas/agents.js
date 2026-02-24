@@ -53,6 +53,28 @@ export function drawDead(ctx, agent) {
   ctx.restore();
 }
 
+export function drawThinking(ctx, agent, now) {
+  const [r, c] = agent.pos;
+  const cx = c * CELL_SIZE + CELL_SIZE / 2;
+  const cy = r * CELL_SIZE;
+
+  const dotCount = 3;
+  const dotSize = 3;
+  const gap = 6;
+  const startX = cx - ((dotCount - 1) * gap) / 2;
+  const baseY = cy + 2;
+
+  ctx.save();
+  for (let i = 0; i < dotCount; i++) {
+    const phase = (now / 300 + i) % dotCount;
+    const alpha = phase < 1 ? 1.0 : 0.3;
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = agent.color;
+    ctx.fillRect(startX + i * gap - dotSize / 2, baseY - dotSize / 2, dotSize, dotSize);
+  }
+  ctx.restore();
+}
+
 export function drawNametags(ctx, agents) {
   ctx.save();
   ctx.font = '5px "Press Start 2P", monospace';

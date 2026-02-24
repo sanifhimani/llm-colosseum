@@ -81,7 +81,12 @@ export default function useBattleSocket({ update }, wsUrl) {
     if (data.type === 'battle_start') {
       statusRef.current = 'live';
       const mapped = mapStateSnapshot(data.state);
-      update((prev) => ({ ...prev, ...mapped, events: [], eventSeq: 0, victory: null }));
+      update((prev) => ({ ...prev, ...mapped, events: [], eventSeq: 0, victory: null, thinkingAgent: null }));
+      return;
+    }
+
+    if (data.type === 'thinking') {
+      update({ thinkingAgent: data.agent });
       return;
     }
 
@@ -89,7 +94,7 @@ export default function useBattleSocket({ update }, wsUrl) {
       statusRef.current = 'live';
       const mapped = mapStateSnapshot(data.state);
       update((prev) => {
-        const next = { ...prev, ...mapped };
+        const next = { ...prev, ...mapped, thinkingAgent: null };
         if (data.event) {
           const seq = next.eventSeq + 1;
           next.eventSeq = seq;

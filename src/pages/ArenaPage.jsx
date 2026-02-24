@@ -8,7 +8,7 @@ import DamageFloat from '../components/DamageFloat';
 import VictoryScreen from '../components/VictoryScreen';
 import IdleOverlay from '../components/IdleOverlay';
 
-export default function ArenaPage({ game, onSimulate, onDismiss, nextBattle }) {
+export default function ArenaPage({ game, onSimulate, onDismiss, nextBattle, simulating }) {
   const isIdle = game.turn === 0 && !game.victory;
 
   return (
@@ -17,7 +17,7 @@ export default function ArenaPage({ game, onSimulate, onDismiss, nextBattle }) {
         <FightersPanel agents={game.agents} />
 
         <div className="arena-col">
-          <ArenaCanvas agents={game.agents} artifacts={game.artifacts} zoneRadius={game.zoneRadius} active={game.turn > 0 && !game.victory}>
+          <ArenaCanvas agents={game.agents} artifacts={game.artifacts} zoneRadius={game.zoneRadius} active={game.turn > 0 && !game.victory} thinkingAgent={game.thinkingAgent}>
             <DamageFloat events={game.events} agents={game.agents} />
           </ArenaCanvas>
           <DialogueBox events={game.events} agents={game.agents} turn={game.turn} />
@@ -38,6 +38,7 @@ export default function ArenaPage({ game, onSimulate, onDismiss, nextBattle }) {
         <VictoryScreen
           stats={game.victory}
           onDismiss={onDismiss}
+          simulating={simulating}
         />
       )}
     </div>

@@ -70,7 +70,7 @@ function AllyTags({ alliances, agents }) {
 
 export default memo(function FightersPanel({ agents }) {
   return (
-    <div className="pbox" style={{ overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+    <div className="pbox fighters-panel">
       <div className="panel-title">{'\u25B6'} FIGHTERS</div>
       <div className="fighters-list">
         {agents.map((agent) => (

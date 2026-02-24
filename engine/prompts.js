@@ -2,33 +2,46 @@ import { parseGrudgeKey } from './game/actions.js';
 
 const VALID_DIRECTIONS = ['N', 'S', 'E', 'W'];
 
-export function buildPrompt(state, agent, memories = []) {
+export function buildPrompt(state, agent, memories = [], recentEvents = [], standings = null) {
   const others = state.agents.filter((a) => a.alive && a.id !== agent.id);
   const { zoneRadius, turn, grudges, artifacts, rules } = state;
+  const gridSize = rules.gridSize;
   const turnsUntilShrink = rules.zoneShrinkInterval - (turn % rules.zoneShrinkInterval);
-  const safeSize = zoneRadius * 2;
+  const attackRange = rules.attackRange || 3;
 
   const allyNames = agent.alliances
     .map((id) => state.agents.find((a) => a.id === id)?.name)
     .filter(Boolean);
 
-  const attackRange = rules.attackRange || 3;
+  const validMoves = getValidMoves(agent, state.agents, gridSize, zoneRadius);
 
   const opponentLines = others.map((o) => {
     const dist = Math.abs(agent.pos[0] - o.pos[0]) + Math.abs(agent.pos[1] - o.pos[1]);
+    const dir = directionHint(agent.pos, o.pos);
     const allyTag = agent.alliances.includes(o.id) ? ' ALLY' : '';
     const rangeTag = dist <= attackRange ? ' IN-RANGE' : '';
-    return `- ${o.name}: HP:${o.hp} POS:[${o.pos}] DIST:${dist} TRUST:${o.trust}${allyTag}${rangeTag}`;
+    return `- ${o.name}: HP:${o.hp} POS:[${o.pos}] ${dir} DIST:${dist} TRUST:${o.trust}${allyTag}${rangeTag}`;
   });
 
   const activeArtifacts = artifacts.filter((a) => a.active);
-  const artifactLine = activeArtifacts.length > 0
-    ? activeArtifacts.map((a) => `${a.name} at [${a.pos}]`).join(' | ')
-    : 'none on map';
+  const artifactLines = activeArtifacts.map((a) => {
+    const dir = directionHint(agent.pos, a.pos);
+    const dist = Math.abs(agent.pos[0] - a.pos[0]) + Math.abs(agent.pos[1] - a.pos[1]);
+    return `${a.name} at [${a.pos}] ${dir} DIST:${dist}`;
+  });
+  const artifactLine = artifactLines.length > 0 ? artifactLines.join(' | ') : 'none on map';
+
+  const zoneInfo = buildZoneInfo(agent.pos, zoneRadius, gridSize, turnsUntilShrink, rules.zoneDamage);
 
   const memoryBlock = memories.length > 0
     ? memories.join('\n')
-    : 'No memories yet.';
+    : 'No memories from previous battles.';
+
+  const eventBlock = recentEvents.length > 0
+    ? recentEvents.join('\n')
+    : 'Battle just started.';
+
+  const seasonBlock = buildSeasonContext(agent, state.agents, standings);
 
   const grudgesAgainst = [];
   const grudgesFrom = [];
@@ -40,19 +53,29 @@ export function buildPrompt(state, agent, memories = []) {
     if (from === agent.id && toName) grudgesFrom.push(`${toName} ${count}x`);
   }
 
-  const actionChoices = buildActionChoices(agent, others, activeArtifacts, attackRange);
+  const actionChoices = buildActionChoices(agent, others, activeArtifacts, attackRange, validMoves);
 
   return [
-    `ARENA BATTLE - You are ${agent.name}. Pick ONE action.`,
+    `ARENA BATTLE - You are ${agent.name}. Turn ${turn}. Pick ONE action.`,
     '',
-    `STATE: HP:${agent.hp}/${agent.maxHp} POS:[${agent.pos}] TRUST:${agent.trust} RANGE:${attackRange}`,
+    `GRID: ${gridSize}x${gridSize} (rows 0-${gridSize - 1}, cols 0-${gridSize - 1}). N=row-1, S=row+1, W=col-1, E=col+1.`,
+    `YOUR STATE: HP:${agent.hp}/${agent.maxHp} POS:[${agent.pos}] TRUST:${agent.trust}`,
+    `CAN MOVE: ${validMoves.length > 0 ? validMoves.join(', ') : 'none (blocked)'}`,
     `ALLIES: ${allyNames.length > 0 ? allyNames.join(', ') : 'none'}`,
+    '',
     'OPPONENTS:',
     ...opponentLines,
-    `ZONE: safe ${safeSize}x${safeSize}, shrinks in ${turnsUntilShrink} turns`,
+    '',
+    zoneInfo,
     `ARTIFACTS: ${artifactLine}`,
     '',
-    'YOUR MEMORIES:',
+    'RECENT EVENTS:',
+    eventBlock,
+    '',
+    'SEASON STANDINGS:',
+    seasonBlock,
+    '',
+    'YOUR MEMORIES FROM PAST BATTLES:',
     memoryBlock,
     '',
     `GRUDGES AGAINST YOU: ${grudgesAgainst.length > 0 ? grudgesAgainst.join(', ') : 'none'}`,
@@ -60,14 +83,70 @@ export function buildPrompt(state, agent, memories = []) {
     '',
     `ACTIONS: ${actionChoices}`,
     '',
-    'Reply EXACTLY:',
+    'Reply in EXACTLY this format (both lines required):',
+    'THINK: {your 1-sentence inner monologue, the audience sees this}',
     'ACTION: {your choice}',
-    'THINK: {1 sentence, shown to audience as your inner monologue}',
   ].join('\n');
 }
 
-function buildActionChoices(agent, others, activeArtifacts, attackRange) {
-  const parts = ['MOVE N/S/E/W'];
+const MOVE_DELTAS = { N: [-1, 0], S: [1, 0], E: [0, 1], W: [0, -1] };
+
+function getValidMoves(agent, agents, gridSize, zoneRadius) {
+  const margin = Math.floor((gridSize - zoneRadius * 2) / 2);
+  const minSafe = margin;
+  const maxSafe = gridSize - margin - 1;
+
+  const valid = [];
+  for (const [dir, [dr, dc]] of Object.entries(MOVE_DELTAS)) {
+    const nr = agent.pos[0] + dr;
+    const nc = agent.pos[1] + dc;
+    if (nr < 0 || nr >= gridSize || nc < 0 || nc >= gridSize) continue;
+    if (agents.some((a) => a.alive && a.id !== agent.id && a.pos[0] === nr && a.pos[1] === nc)) continue;
+    const leavesZone = nr < minSafe || nr > maxSafe || nc < minSafe || nc > maxSafe;
+    valid.push(leavesZone ? `${dir}(DANGER:red zone!)` : dir);
+  }
+  return valid;
+}
+
+function directionHint(from, to) {
+  const dr = to[0] - from[0];
+  const dc = to[1] - from[1];
+  const parts = [];
+  if (dr < 0) parts.push(`${Math.abs(dr)}N`);
+  if (dr > 0) parts.push(`${dr}S`);
+  if (dc < 0) parts.push(`${Math.abs(dc)}W`);
+  if (dc > 0) parts.push(`${dc}E`);
+  return parts.length > 0 ? `(${parts.join(',')})` : '(same cell)';
+}
+
+function buildZoneInfo(pos, zoneRadius, gridSize, turnsUntilShrink, zoneDamage) {
+  const margin = Math.floor((gridSize - zoneRadius * 2) / 2);
+  const minSafe = margin;
+  const maxSafe = gridSize - margin - 1;
+  const inZone = pos[0] >= minSafe && pos[0] <= maxSafe && pos[1] >= minSafe && pos[1] <= maxSafe;
+
+  const lines = [`ZONE: safe rows ${minSafe}-${maxSafe}, cols ${minSafe}-${maxSafe}. Shrinks in ${turnsUntilShrink} turns.`];
+
+  if (inZone) {
+    lines.push('You are INSIDE the safe zone.');
+  } else {
+    const escDirs = [];
+    if (pos[0] < minSafe) escDirs.push('S');
+    if (pos[0] > maxSafe) escDirs.push('N');
+    if (pos[1] < minSafe) escDirs.push('E');
+    if (pos[1] > maxSafe) escDirs.push('W');
+    lines.push(`WARNING: You are OUTSIDE the safe zone! You lose ${zoneDamage} HP every turn. Move ${escDirs.join('+')} to get back in!`);
+  }
+
+  return lines.join('\n');
+}
+
+function buildActionChoices(agent, others, activeArtifacts, attackRange, validMoves) {
+  const parts = [];
+
+  if (validMoves.length > 0) {
+    parts.push(`MOVE ${validMoves.join('/')}`);
+  }
 
   const inRange = others.filter((o) => {
     const dist = Math.abs(agent.pos[0] - o.pos[0]) + Math.abs(agent.pos[1] - o.pos[1]);
@@ -92,11 +171,47 @@ function buildActionChoices(agent, others, activeArtifacts, attackRange) {
     parts.push(`BETRAY ${alliesInRange.map((o) => o.name).join('/')}`);
   }
 
-  if (activeArtifacts.length > 0) {
-    parts.push(`USE ${activeArtifacts.map((a) => a.name).join('/')}`);
+  const onArtifact = activeArtifacts.find((a) => a.pos[0] === agent.pos[0] && a.pos[1] === agent.pos[1]);
+  if (onArtifact) {
+    parts.push(`USE ${onArtifact.name}`);
   }
 
   return parts.join(' | ');
+}
+
+function buildSeasonContext(agent, allAgents, standings) {
+  if (!standings || standings.totalBattles === 0) return 'First battle of the season.';
+
+  const nameMap = Object.fromEntries(allAgents.map((a) => [a.id, a.name]));
+  const lines = [];
+
+  const myStats = standings.agents[agent.id];
+  if (myStats) {
+    lines.push(`Your record: ${myStats.wins}W-${myStats.losses}L, ${myStats.kills} kills, ${myStats.deaths} deaths`);
+  }
+
+  const otherIds = allAgents.filter((a) => a.id !== agent.id).map((a) => a.id);
+  for (const id of otherIds) {
+    const s = standings.agents[id];
+    if (!s) continue;
+    const tags = [];
+    if (s.betrayals > 0) tags.push(`${s.betrayals} betrayals`);
+    if (s.kills > 0) tags.push(`${s.kills} kills`);
+    lines.push(`${nameMap[id]}: ${s.wins}W-${s.losses}L${tags.length > 0 ? ` (${tags.join(', ')})` : ''}`);
+  }
+
+  for (const [key, record] of Object.entries(standings.headToHead || {})) {
+    const ids = key.split('_vs_');
+    if (!ids.includes(agent.id)) continue;
+    const opponentId = ids[0] === agent.id ? ids[1] : ids[0];
+    const myKills = record[agent.id] || 0;
+    const theirKills = record[opponentId] || 0;
+    if (myKills > 0 || theirKills > 0) {
+      lines.push(`H2H vs ${nameMap[opponentId]}: you killed them ${myKills}x, they killed you ${theirKills}x`);
+    }
+  }
+
+  return lines.join('\n');
 }
 
 export function parseResponse(text) {

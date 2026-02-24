@@ -5,11 +5,11 @@ import { drawWalls } from '../canvas/walls';
 import { drawZone } from '../canvas/zone';
 import { drawArtifacts } from '../canvas/artifacts';
 import { drawAlliances } from '../canvas/alliances';
-import { drawAgent, drawDead, drawNametags } from '../canvas/agents';
+import { drawAgent, drawDead, drawNametags, drawThinking } from '../canvas/agents';
 
 function renderFrame(ctx, data) {
   const now = Date.now();
-  const { agents, artifacts, zoneRadius } = data;
+  const { agents, artifacts, zoneRadius, thinkingAgent } = data;
 
   ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
   drawFloor(ctx);
@@ -29,6 +29,9 @@ function renderFrame(ctx, data) {
     for (const agent of agents) {
       if (agent.alive) {
         drawAgent(ctx, agent);
+        if (agent.id === thinkingAgent) {
+          drawThinking(ctx, agent, now);
+        }
       } else {
         drawDead(ctx, agent);
       }
@@ -37,14 +40,14 @@ function renderFrame(ctx, data) {
   }
 }
 
-export default function ArenaCanvas({ agents = [], artifacts = [], zoneRadius, active, children }) {
+export default function ArenaCanvas({ agents = [], artifacts = [], zoneRadius, active, thinkingAgent, children }) {
   const canvasRef = useRef(null);
   const frameRef = useRef(null);
-  const dataRef = useRef({ agents, artifacts, zoneRadius });
+  const dataRef = useRef({ agents, artifacts, zoneRadius, thinkingAgent });
 
   useEffect(() => {
-    dataRef.current = { agents, artifacts, zoneRadius };
-  }, [agents, artifacts, zoneRadius]);
+    dataRef.current = { agents, artifacts, zoneRadius, thinkingAgent };
+  }, [agents, artifacts, zoneRadius, thinkingAgent]);
 
   useEffect(() => {
     const canvas = canvasRef.current;

@@ -8,9 +8,12 @@ const INVALID_THINKING = 'CONFUSED...';
 const MAX_CONSECUTIVE_FAILURES = 3;
 const MAX_RESPONSE_TOKENS = 150;
 
-export async function runBattle(meta, agents, { onEvent, turnPauseMs = 0 } = {}) {
+const RECENT_EVENTS_LIMIT = 12;
+
+export async function runBattle(meta, agents, { onEvent, turnPauseMs = 0, memories = {}, standings = null } = {}) {
   const state = createGameState(meta);
   const agentMap = Object.fromEntries(agents.map((a) => [a.id, a]));
+  const recentEvents = [];
 
   emit(onEvent, { type: 'battle_start', state: snapshotState(state) });
 
@@ -21,8 +24,13 @@ export async function runBattle(meta, agents, { onEvent, turnPauseMs = 0 } = {})
     const agent = alive[turnIndex % alive.length];
     const agentInstance = agentMap[agent.id];
 
-    const turnResult = await executeTurn(state, agent, agentInstance);
+    emit(onEvent, { type: 'thinking', agent: agent.id });
+
+    const agentMemories = memories[agent.id] || [];
+    const turnResult = await executeTurn(state, agent, agentInstance, agentMemories, recentEvents, standings);
     const event = applyTurnResult(state, agent.id, turnResult);
+
+    trackRecentEvent(recentEvents, state, agent, turnResult, event);
 
     emit(onEvent, {
       type: 'turn',
@@ -68,12 +76,12 @@ export async function runBattle(meta, agents, { onEvent, turnPauseMs = 0 } = {})
   return { winner, turns: state.turn, state };
 }
 
-async function executeTurn(state, agent, agentInstance) {
+async function executeTurn(state, agent, agentInstance, agentMemories, recentEvents, standings) {
   if (agent.autopilot) {
     return executeAutopilot(state, agent);
   }
 
-  const prompt = buildPrompt(state, agent);
+  const prompt = buildPrompt(state, agent, agentMemories, recentEvents, standings);
   const callOpts = {
     timeout: state.rules.apiTimeoutMs,
     maxTokens: MAX_RESPONSE_TOKENS,
@@ -84,13 +92,16 @@ async function executeTurn(state, agent, agentInstance) {
 
   try {
     response = await agentInstance.call(prompt, callOpts);
-  } catch {
+  } catch (err) {
+    console.error(`[${agent.id}] API call failed: ${err.message}`);
     try {
       response = await agentInstance.call(prompt, callOpts);
-    } catch {
+    } catch (retryErr) {
+      console.error(`[${agent.id}] retry failed: ${retryErr.message}`);
       agent.consecutiveFailures++;
       if (agent.consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {
         agent.autopilot = true;
+        console.error(`[${agent.id}] entering autopilot after ${MAX_CONSECUTIVE_FAILURES} consecutive failures`);
       }
       return { action: { type: 'STUNNED' }, thinking: STUNNED_THINKING, latencyMs: 0 };
     }
@@ -155,6 +166,49 @@ function applyTurnResult(state, agentId, turnResult) {
   }
 
   return result?.event || null;
+}
+
+function trackRecentEvent(recentEvents, state, agent, turnResult, event) {
+  const nameMap = Object.fromEntries(state.agents.map((a) => [a.id, a.name]));
+  const { action } = turnResult;
+  let desc;
+
+  switch (action.type) {
+    case 'MOVE':
+      desc = `T${state.turn}: ${agent.name} moved ${action.direction}`;
+      break;
+    case 'ATTACK': {
+      const dmg = event?.damage || 0;
+      const killed = event?.type === 'kill' ? ' (KILLED)' : '';
+      desc = `T${state.turn}: ${agent.name} attacked ${nameMap[action.target]} for ${dmg} dmg${killed}`;
+      break;
+    }
+    case 'ALLY':
+      desc = `T${state.turn}: ${agent.name} proposed alliance with ${nameMap[action.target]}`;
+      break;
+    case 'BETRAY': {
+      const dmg = event?.damage || 0;
+      const killed = event?.type === 'betray_kill' ? ' (KILLED)' : '';
+      desc = `T${state.turn}: ${agent.name} BETRAYED ${nameMap[action.target]} for ${dmg} dmg${killed}`;
+      break;
+    }
+    case 'USE_ARTIFACT':
+      desc = `T${state.turn}: ${agent.name} picked up an artifact`;
+      break;
+    case 'STUNNED':
+      desc = `T${state.turn}: ${agent.name} was stunned (API timeout)`;
+      break;
+    case 'INVALID':
+      desc = `T${state.turn}: ${agent.name} fumbled (invalid action)`;
+      break;
+    default:
+      return;
+  }
+
+  recentEvents.push(desc);
+  if (recentEvents.length > RECENT_EVENTS_LIMIT) {
+    recentEvents.shift();
+  }
 }
 
 function snapshotState(state) {

@@ -50,6 +50,14 @@ app.get('/status', (c) => {
 });
 
 app.post('/api/trigger', async (c) => {
+  const adminToken = process.env.ADMIN_TOKEN;
+  if (adminToken) {
+    const auth = c.req.header('Authorization');
+    if (auth !== `Bearer ${adminToken}`) {
+      return c.json({ error: 'unauthorized' }, 401);
+    }
+  }
+
   if (activeBattle) {
     return c.json({ error: 'battle already in progress' }, 409);
   }

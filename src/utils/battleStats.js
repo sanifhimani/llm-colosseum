@@ -1,4 +1,4 @@
-export function extractBattleStats(events) {
+export function extractBattleStats(events, { winnerHp, day, season } = {}) {
   let victoryIdx = -1;
   for (let i = events.length - 1; i >= 0; i--) {
     if (events[i].type === 'victory') {
@@ -10,6 +10,10 @@ export function extractBattleStats(events) {
   if (victoryIdx === -1) {
     return {
       winner: null,
+      winnerHp: null,
+      betrayedBy: [],
+      day: null,
+      season: null,
       victoryEventId: null,
       eliminations: [],
       totalTurns: 0,
@@ -31,6 +35,7 @@ export function extractBattleStats(events) {
   const victoryEvent = events[victoryIdx];
   const winner = { id: victoryEvent.agent, turn: victoryEvent.turn };
   const eliminations = [];
+  const betrayedBy = [];
   let totalTurns = 0;
   let totalKills = 0;
   let totalBetrayals = 0;
@@ -75,6 +80,7 @@ export function extractBattleStats(events) {
         break;
       case 'betray':
         totalBetrayals++;
+        if (e.target === winner.id) betrayedBy.push(e.agent);
         break;
       case 'alliance':
         totalAlliances++;
@@ -87,6 +93,10 @@ export function extractBattleStats(events) {
 
   return {
     winner,
+    winnerHp: winnerHp ?? null,
+    betrayedBy,
+    day: day ?? null,
+    season: season ?? null,
     victoryEventId: victoryEvent.id,
     eliminations,
     totalTurns,

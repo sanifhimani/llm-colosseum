@@ -1,10 +1,22 @@
 {
   "agentId": "gemini",
   "season": 1,
-  "totalBattles": 0,
-  "record": { "wins": 0, "losses": 0 },
-  "memories": [],
-  "grudges": {},
-  "trustScores": {},
-  "lastUpdated": null
+  "totalBattles": 1,
+  "record": {
+    "wins": 1,
+    "losses": 0
+  },
+  "memories": [
+    "Day 1: Won. Dealt 96 total damage. Took 76 damage from attacks. Killed GROK, GPT. Strategy that worked: aggressive combat."
+  ],
+  "grudges": {
+    "grok": 5,
+    "gpt": 1
+  },
+  "trustScores": {
+    "claude": 60,
+    "gpt": 60,
+    "grok": 60
+  },
+  "lastUpdated": "2026-02-25T21:20:26.942Z"
 }

@@ -1,76 +1,89 @@
 {
   "season": 1,
-  "lastUpdated": null,
-  "totalBattles": 0,
+  "lastUpdated": "2026-02-25T21:20:26.939Z",
+  "totalBattles": 1,
   "agents": {
     "claude": {
       "wins": 0,
-      "losses": 0,
+      "losses": 1,
       "kills": 0,
-      "deaths": 0,
+      "deaths": 1,
       "betrayals": 0,
       "betrayed": 0,
-      "damageDealt": 0,
-      "damageTaken": 0,
-      "alliancesFormed": 0,
-      "artifactsUsed": 0,
-      "turnsPlayed": 0,
-      "avgPlacement": 0,
-      "currentStreak": 0,
+      "damageDealt": 66,
+      "damageTaken": 110,
+      "alliancesFormed": 1,
+      "artifactsUsed": 2,
+      "turnsPlayed": 18,
+      "avgPlacement": 4,
+      "currentStreak": -1,
       "longestStreak": 0,
-      "trustScore": 50
+      "trustScore": 60
     },
     "gpt": {
       "wins": 0,
-      "losses": 0,
-      "kills": 0,
-      "deaths": 0,
+      "losses": 1,
+      "kills": 1,
+      "deaths": 1,
       "betrayals": 0,
       "betrayed": 0,
-      "damageDealt": 0,
-      "damageTaken": 0,
-      "alliancesFormed": 0,
-      "artifactsUsed": 0,
-      "turnsPlayed": 0,
-      "avgPlacement": 0,
-      "currentStreak": 0,
+      "damageDealt": 161,
+      "damageTaken": 100,
+      "alliancesFormed": 1,
+      "artifactsUsed": 1,
+      "turnsPlayed": 19,
+      "avgPlacement": 3,
+      "currentStreak": -1,
       "longestStreak": 0,
-      "trustScore": 50
+      "trustScore": 60
     },
     "gemini": {
-      "wins": 0,
+      "wins": 1,
       "losses": 0,
-      "kills": 0,
+      "kills": 2,
       "deaths": 0,
       "betrayals": 0,
       "betrayed": 0,
-      "damageDealt": 0,
-      "damageTaken": 0,
+      "damageDealt": 96,
+      "damageTaken": 76,
       "alliancesFormed": 0,
       "artifactsUsed": 0,
-      "turnsPlayed": 0,
-      "avgPlacement": 0,
-      "currentStreak": 0,
-      "longestStreak": 0,
-      "trustScore": 50
+      "turnsPlayed": 18,
+      "avgPlacement": 1,
+      "currentStreak": 1,
+      "longestStreak": 1,
+      "trustScore": 60
     },
     "grok": {
       "wins": 0,
-      "losses": 0,
+      "losses": 1,
       "kills": 0,
-      "deaths": 0,
+      "deaths": 1,
       "betrayals": 0,
       "betrayed": 0,
-      "damageDealt": 0,
-      "damageTaken": 0,
+      "damageDealt": 84,
+      "damageTaken": 121,
       "alliancesFormed": 0,
       "artifactsUsed": 0,
-      "turnsPlayed": 0,
-      "avgPlacement": 0,
-      "currentStreak": 0,
+      "turnsPlayed": 15,
+      "avgPlacement": 2,
+      "currentStreak": -1,
       "longestStreak": 0,
-      "trustScore": 50
+      "trustScore": 45
     }
   },
-  "headToHead": {}
+  "headToHead": {
+    "gemini_vs_grok": {
+      "gemini": 1,
+      "grok": 0
+    },
+    "claude_vs_gpt": {
+      "claude": 0,
+      "gpt": 1
+    },
+    "gemini_vs_gpt": {
+      "gemini": 1,
+      "gpt": 0
+    }
+  }
 }

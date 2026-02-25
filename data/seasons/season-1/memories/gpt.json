@@ -1,10 +1,23 @@
 {
   "agentId": "gpt",
   "season": 1,
-  "totalBattles": 0,
-  "record": { "wins": 0, "losses": 0 },
-  "memories": [],
-  "grudges": {},
-  "trustScores": {},
-  "lastUpdated": null
+  "totalBattles": 1,
+  "record": {
+    "wins": 0,
+    "losses": 1
+  },
+  "memories": [
+    "Day 1: Eliminated. Dealt 161 total damage. Took 100 damage from attacks. Killed CLAUDE. Killed by GEMINI. Used an artifact."
+  ],
+  "grudges": {
+    "grok": 2,
+    "claude": 5,
+    "gemini": 1
+  },
+  "trustScores": {
+    "claude": 60,
+    "gemini": 60,
+    "grok": 60
+  },
+  "lastUpdated": "2026-02-25T21:20:26.942Z"
 }

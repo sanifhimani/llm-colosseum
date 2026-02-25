@@ -18,7 +18,7 @@ function getH2hKills(headToHead, rowId, colId) {
   const key = [rowId, colId].sort().join('_vs_');
   const matchup = headToHead[key];
   if (!matchup) return 0;
-  return matchup[rowId]?.kills ?? 0;
+  return matchup[rowId] ?? 0;
 }
 
 function getH2hClass(headToHead, rowId, colId) {

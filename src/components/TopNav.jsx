@@ -1,13 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from '../router';
 
-function getDayNumber() {
-  const now = new Date();
-  const start = new Date(2026, 1, 22);
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  return Math.max(1, Math.floor((today - start) / 86400000) + 1);
-}
-
 const NAV_LINKS = [
   { to: '/', label: 'ARENA' },
   { to: '/standings', label: 'STANDINGS' },
@@ -20,18 +13,20 @@ function isLinkActive(to, pathname) {
   return pathname.startsWith(to);
 }
 
-export default function TopNav({ live = false, simulating = false }) {
+export default function TopNav({ live = false, simulating = false, totalBattles = null }) {
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const day = getDayNumber();
+  const day = totalBattles != null ? totalBattles + 1 : null;
 
   let centerEl;
   if (simulating) {
     centerEl = <span className="topnav-sim">SIMULATION</span>;
   } else if (live) {
     centerEl = <span className="topnav-live">{'\u25CF'} LIVE</span>;
-  } else {
+  } else if (day) {
     centerEl = <span className="topnav-center">S1 // DAY {day}</span>;
+  } else {
+    centerEl = <span className="topnav-center">S1</span>;
   }
 
   return (

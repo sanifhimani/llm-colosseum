@@ -72,7 +72,7 @@ function App() {
 
   return (
     <div className="app-shell">
-      <TopNav live={!simulating && battleActive} simulating={simulating && battleActive} />
+      <TopNav live={!simulating && battleActive} simulating={simulating && battleActive} totalBattles={schedule.totalBattles} />
       <PageRouter game={game} onSimulate={handleSimulate} onDismiss={handleDismiss} nextBattle={schedule.nextBattle} simulating={simulating} />
     </div>
   );

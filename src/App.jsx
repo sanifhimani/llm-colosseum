@@ -10,6 +10,7 @@ import useGameState from './hooks/useGameState';
 import useSimulation from './hooks/useSimulation';
 import useBattleSocket from './hooks/useBattleSocket';
 import useSchedule from './hooks/useSchedule';
+import { updatePageTitle } from './utils/ogTags';
 
 const WS_URL = import.meta.env.VITE_WS_URL ||
   `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/ws/battle`;
@@ -37,9 +38,14 @@ function PageRouter({ game, onSimulate, onDismiss, nextBattle, simulating }) {
 
 function App() {
   const mode = useMode();
+  const { pathname } = useLocation();
   const game = useGameState();
   const schedule = useSchedule();
   const [simulating, setSimulating] = useState(false);
+
+  useEffect(() => {
+    updatePageTitle(pathname);
+  }, [pathname]);
 
   const { reset, setPersist } = game;
   const { start, restart } = useSimulation(game);

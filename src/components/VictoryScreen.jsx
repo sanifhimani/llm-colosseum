@@ -24,8 +24,9 @@ export default function VictoryScreen({ stats, onDismiss, simulating = false }) 
       a.click();
       setTimeout(() => URL.revokeObjectURL(url), 5000);
 
+      const siteUrl = import.meta.env.VITE_SITE_URL || 'https://llmcolosseum.dev';
       const tweetText = encodeURIComponent(
-        `${winnerName} won the LLM Colosseum battle in ${totalTurns} turns! #LLMColosseum\n\nhttps://llmcolosseum.dev`
+        `${winnerName} won the LLM Colosseum battle in ${totalTurns} turns! #LLMColosseum\n\n${siteUrl}`
       );
       window.open(`https://x.com/intent/tweet?text=${tweetText}`, '_blank');
     } catch {

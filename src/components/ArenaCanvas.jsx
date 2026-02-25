@@ -5,11 +5,11 @@ import { drawWalls } from '../canvas/walls';
 import { drawZone } from '../canvas/zone';
 import { drawArtifacts } from '../canvas/artifacts';
 import { drawAlliances } from '../canvas/alliances';
-import { drawAgent, drawDead, drawNametags, drawThinking } from '../canvas/agents';
+import { drawAgent, drawDead, drawNametags, drawThinking, drawStunned } from '../canvas/agents';
 
 function renderFrame(ctx, data) {
   const now = Date.now();
-  const { agents, artifacts, zoneRadius, thinkingAgent } = data;
+  const { agents, artifacts, zoneRadius, thinkingAgent, stunnedAgents } = data;
 
   ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
   drawFloor(ctx);
@@ -28,8 +28,11 @@ function renderFrame(ctx, data) {
     drawAlliances(ctx, agents);
     for (const agent of agents) {
       if (agent.alive) {
-        drawAgent(ctx, agent);
-        if (agent.id === thinkingAgent) {
+        const isStunned = stunnedAgents?.has(agent.id);
+        drawAgent(ctx, agent, isStunned);
+        if (isStunned) {
+          drawStunned(ctx, agent, now);
+        } else if (agent.id === thinkingAgent) {
           drawThinking(ctx, agent, now);
         }
       } else {
@@ -40,14 +43,14 @@ function renderFrame(ctx, data) {
   }
 }
 
-export default function ArenaCanvas({ agents = [], artifacts = [], zoneRadius, active, thinkingAgent, children }) {
+export default function ArenaCanvas({ agents = [], artifacts = [], zoneRadius, active, thinkingAgent, stunnedAgents, children }) {
   const canvasRef = useRef(null);
   const frameRef = useRef(null);
-  const dataRef = useRef({ agents, artifacts, zoneRadius, thinkingAgent });
+  const dataRef = useRef({ agents, artifacts, zoneRadius, thinkingAgent, stunnedAgents });
 
   useEffect(() => {
-    dataRef.current = { agents, artifacts, zoneRadius, thinkingAgent };
-  }, [agents, artifacts, zoneRadius, thinkingAgent]);
+    dataRef.current = { agents, artifacts, zoneRadius, thinkingAgent, stunnedAgents };
+  }, [agents, artifacts, zoneRadius, thinkingAgent, stunnedAgents]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -73,7 +76,7 @@ export default function ArenaCanvas({ agents = [], artifacts = [], zoneRadius, a
         frameRef.current = null;
       }
     };
-  }, [active, agents, artifacts, zoneRadius]);
+  }, [active]);
 
   return (
     <div className="arena-wrap pbox" style={{ padding: 0, overflow: 'hidden' }}>

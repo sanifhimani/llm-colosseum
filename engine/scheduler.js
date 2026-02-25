@@ -5,7 +5,13 @@ import { resolve } from 'path';
 let jobs = [];
 
 function buildCron(timeStr, days) {
-  const [hour, minute] = timeStr.split(':');
+  if (!/^\d{2}:\d{2}$/.test(timeStr)) {
+    throw new Error(`Invalid time format: ${timeStr} (expected HH:MM)`);
+  }
+  const [hour, minute] = timeStr.split(':').map(Number);
+  if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+    throw new Error(`Invalid time value: ${timeStr} (hour 0-23, minute 0-59)`);
+  }
   return `${minute} ${hour} * * ${days}`;
 }
 

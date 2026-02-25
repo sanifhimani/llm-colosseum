@@ -30,9 +30,14 @@ export function createDataRoutes(dataDir) {
 
     const standings = readJson(resolve(seasonDir(dataDir, season), 'standings.json'));
 
+    const memories = {};
+    for (const entry of meta.roster) {
+      memories[entry.id] = readJson(resolve(seasonDir(dataDir, season), 'memories', `${entry.id}.json`));
+    }
+
     const agents = meta.roster.map((entry) => {
       const stats = standings?.agents?.[entry.id] || {};
-      const memory = readJson(resolve(seasonDir(dataDir, season), 'memories', `${entry.id}.json`));
+      const memory = memories[entry.id];
 
       return {
         id: entry.id,
@@ -60,6 +65,8 @@ export function createDataRoutes(dataDir) {
   app.get('/agents/:id', (c) => {
     const season = currentSeason();
     const { id } = c.req.param();
+
+    if (!/^[a-z0-9-]+$/.test(id)) return c.json({ error: 'invalid agent id' }, 400);
 
     const meta = readJson(resolve(seasonDir(dataDir, season), 'meta.json'));
     if (!meta) return c.json({ error: 'no season data found' }, 404);

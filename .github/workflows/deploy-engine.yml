@@ -1,0 +1,25 @@
+name: Deploy Engine
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'engine/**'
+      - 'Dockerfile'
+      - '.dockerignore'
+      - 'railway.json'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        run: railway up --detach
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_SERVICE_ID: ${{ vars.RAILWAY_SERVICE_ID }}

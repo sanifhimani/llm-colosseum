@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+const API_BASE = import.meta.env.VITE_API_BASE || '';
+
 export default function useApi(url) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -14,7 +16,7 @@ export default function useApi(url) {
 
     async function fetchData() {
       try {
-        const res = await fetch(url);
+        const res = await fetch(`${API_BASE}${url}`);
         if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
         const json = await res.json();
         if (!cancelled) {

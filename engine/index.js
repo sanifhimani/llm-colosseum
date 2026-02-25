@@ -1,17 +1,24 @@
+import { resolve } from 'path';
+
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+
 import { loadSeasonMeta } from './game/state.js';
 import { createAgentsFromRoster } from './agents/factory.js';
 import { runBattle } from './battle.js';
 import { nextDayNumber, buildTranscript, writeTranscript, updateStandings, updateMemory, loadMemories, loadStandings } from './persistence.js';
 import { createDataRoutes } from './routes/data.js';
-import { startScheduler } from './scheduler.js';
+import { startScheduler, stopScheduler } from './scheduler.js';
+import { initGit, commitAndPush } from './git.js';
 
 const useMock = process.env.USE_MOCK === 'true';
 
 const app = new Hono();
 const port = process.env.PORT || 8080;
 const DATA_DIR = new URL('../data', import.meta.url).pathname;
+const REPO_ROOT = resolve(DATA_DIR, '..');
+
+await initGit(REPO_ROOT);
 
 app.use('*', cors());
 app.route('/api', createDataRoutes(DATA_DIR));
@@ -120,6 +127,9 @@ async function startBattle() {
         updateMemory(DATA_DIR, meta.season, agent.id, day, won, battleResult.state, turnLog, eventLog);
       }
       console.log('[persist] memories updated');
+
+      const winnerName = winner?.name || 'draw';
+      await commitAndPush(REPO_ROOT, `data: day ${day} - ${winnerName} wins`);
     } catch (err) {
       console.error('[persist] error:', err);
     }
@@ -167,4 +177,26 @@ console.log(`[engine] listening on :${server.port} (${useMock ? 'MOCK' : 'LIVE'}
 
 startScheduler(DATA_DIR, () => {
   if (!activeBattle) startBattle();
+});
+
+process.on('SIGTERM', async () => {
+  console.log('[engine] SIGTERM received, shutting down');
+  stopScheduler();
+
+  const deadline = Date.now() + 120_000;
+  while (activeBattle && Date.now() < deadline) {
+    await Bun.sleep(1000);
+  }
+
+  if (activeBattle) {
+    console.log('[engine] battle still active after 120s, forcing exit');
+  }
+
+  try {
+    await commitAndPush(REPO_ROOT, 'data: shutdown commit');
+  } catch {
+  }
+
+  server.stop();
+  process.exit(0);
 });

@@ -56,6 +56,14 @@ export default function TopNav({ live = false, simulating = false }) {
             {label}
           </Link>
         ))}
+        <a
+          href="https://github.com/sanifhimani/llm-colosseum"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="topnav-link"
+        >
+          GITHUB
+        </a>
       </div>
     </nav>
   );

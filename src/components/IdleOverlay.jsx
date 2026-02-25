@@ -88,6 +88,15 @@ export default function IdleOverlay({ onSimulate, nextBattle }) {
         </div>
 
         <div className="idle-status">SEASON {season} // DAY {totalBattles + 1}</div>
+
+        <a
+          href="https://github.com/sanifhimani/llm-colosseum"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="idle-github"
+        >
+          STAR ON GITHUB
+        </a>
       </div>
     </div>
   );

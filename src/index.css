@@ -1315,6 +1315,19 @@ body::after {
   letter-spacing: 1px;
 }
 
+.idle-github {
+  font-size: 7px;
+  color: var(--color-dim);
+  letter-spacing: 1px;
+  margin-top: 8px;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.idle-github:hover {
+  color: var(--color-white);
+}
+
 .topnav-hamburger {
   display: none;
   flex-direction: column;

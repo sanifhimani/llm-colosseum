@@ -17,7 +17,7 @@ export default function ArenaPage({ game, onSimulate, onDismiss, nextBattle, sim
         <FightersPanel agents={game.agents} />
 
         <div className="arena-col">
-          <ArenaCanvas agents={game.agents} artifacts={game.artifacts} zoneRadius={game.zoneRadius} active={game.turn > 0 && !game.victory} thinkingAgent={game.thinkingAgent}>
+          <ArenaCanvas agents={game.agents} artifacts={game.artifacts} zoneRadius={game.zoneRadius} active={game.turn > 0 && !game.victory} thinkingAgent={game.thinkingAgent} stunnedAgents={game.stunnedAgents}>
             <DamageFloat events={game.events} agents={game.agents} />
           </ArenaCanvas>
           <DialogueBox events={game.events} agents={game.agents} turn={game.turn} />

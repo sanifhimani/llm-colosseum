@@ -10,10 +10,10 @@ const STARTING_POSITIONS = {
 };
 
 export const ROSTER = [
-  { id: 'claude', name: 'CLAUDE', color: '#e07820', model: 'claude-sonnet-4-6' },
-  { id: 'gpt', name: 'GPT', color: '#20c090', model: 'gpt-4.1' },
+  { id: 'claude', name: 'CLAUDE', color: '#e07820', model: 'claude-opus-4-6' },
+  { id: 'gpt', name: 'GPT', color: '#20c090', model: 'gpt-5.2' },
   { id: 'gemini', name: 'GEMINI', color: '#4090f0', model: 'gemini-3.1-pro-preview' },
-  { id: 'grok', name: 'GROK', color: '#a0a0a8', model: 'grok-3' },
+  { id: 'grok', name: 'GROK', color: '#a0a0a8', model: 'grok-4-1-fast-non-reasoning' },
 ];
 
 export function createAgents() {

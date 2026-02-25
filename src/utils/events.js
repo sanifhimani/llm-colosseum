@@ -24,6 +24,8 @@ export function formatEvent(event) {
       return { msg: `${name(event.agent)} BETRAYED and eliminated ${name(event.target)} (${event.damage} dmg)`, color: 'var(--color-red)' };
     case 'artifact':
       return { msg: `${name(event.agent)} picked up ${event.artifact}`, color: 'var(--color-gold)' };
+    case 'stunned':
+      return { msg: `${name(event.agent)} is STUNNED (API error)`, color: 'var(--color-dim)' };
     case 'zone_damage':
       return { msg: `${name(event.agent)} took ${event.damage} zone damage`, color: '#c04040' };
     case 'zone_kill':

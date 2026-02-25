@@ -1,37 +1,10 @@
 import { useState, useMemo } from 'react';
 import useApi from '../hooks/useApi';
+import { formatAction } from '../utils/format';
 
 const INTERESTING_EVENTS = new Set(['kill', 'attack', 'alliance', 'ally_propose', 'artifact']);
 
 const ORDINALS = ['1ST', '2ND', '3RD', '4TH', '5TH', '6TH', '7TH', '8TH'];
-
-function formatAction(turn) {
-  const { action, event } = turn;
-  if (!event) {
-    if (action.type === 'MOVE') return `MOVED ${action.direction}`;
-    return action.type;
-  }
-
-  const target = (event.target || action.target || '').toUpperCase();
-  const dmg = event.damage ? ` FOR ${event.damage} DMG` : '';
-
-  switch (event.type) {
-    case 'kill':
-      return `ATTACKED ${target}${dmg} -- ELIMINATED`;
-    case 'attack':
-      return `ATTACKED ${target}${dmg}`;
-    case 'alliance':
-      return `ALLIED WITH ${target}`;
-    case 'ally_propose':
-      return `PROPOSED ALLIANCE WITH ${target}`;
-    case 'artifact':
-      return `PICKED UP ${(event.artifact || '').toUpperCase()}`;
-    case 'move':
-      return `MOVED ${event.direction || action.direction}`;
-    default:
-      return action.type;
-  }
-}
 
 function formatDuration(startedAt, endedAt) {
   const ms = new Date(endedAt) - new Date(startedAt);

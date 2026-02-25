@@ -8,14 +8,14 @@
     {
       "id": "claude",
       "name": "CLAUDE",
-      "model": "claude-sonnet-4-6",
+      "model": "claude-opus-4-6",
       "provider": "anthropic",
       "color": "#e07820"
     },
     {
       "id": "gpt",
       "name": "GPT",
-      "model": "gpt-4.1",
+      "model": "gpt-5.2",
       "provider": "openai",
       "color": "#20c090"
     },
@@ -29,7 +29,7 @@
     {
       "id": "grok",
       "name": "GROK",
-      "model": "grok-3",
+      "model": "grok-4-1-fast-non-reasoning",
       "provider": "xai",
       "color": "#a0a0a8"
     }

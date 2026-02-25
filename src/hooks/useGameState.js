@@ -14,6 +14,7 @@ function createInitialState() {
     zoneRadius: GRID_SIZE / 2,
     turn: 0,
     grudges: {},
+    stunnedAgents: new Set(),
     events: saved.events,
     eventSeq: saved.eventSeq,
     victory: saved.victory,

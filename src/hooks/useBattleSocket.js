@@ -81,7 +81,7 @@ export default function useBattleSocket({ update }, wsUrl) {
     if (data.type === 'battle_start') {
       statusRef.current = 'live';
       const mapped = mapStateSnapshot(data.state);
-      update((prev) => ({ ...prev, ...mapped, events: [], eventSeq: 0, victory: null, thinkingAgent: null }));
+      update((prev) => ({ ...prev, ...mapped, turn: mapped.turn || 1, events: [], eventSeq: 0, victory: null, thinkingAgent: null }));
       return;
     }
 
@@ -93,8 +93,16 @@ export default function useBattleSocket({ update }, wsUrl) {
     if (data.type === 'turn') {
       statusRef.current = 'live';
       const mapped = mapStateSnapshot(data.state);
+      const isStunned = data.action?.type === 'STUNNED';
       update((prev) => {
-        const next = { ...prev, ...mapped, thinkingAgent: null };
+        const stunnedAgents = new Set(prev.stunnedAgents);
+        if (isStunned) {
+          stunnedAgents.add(data.agent);
+        } else {
+          stunnedAgents.delete(data.agent);
+        }
+        const turn = Math.max(mapped.turn, prev.turn, 1);
+        const next = { ...prev, ...mapped, turn, thinkingAgent: null, stunnedAgents };
         if (data.event) {
           const seq = next.eventSeq + 1;
           next.eventSeq = seq;

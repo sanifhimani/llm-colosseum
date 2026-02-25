@@ -1,11 +1,10 @@
 import { createGameState, aliveAgents, isGameOver, getWinner } from './game/state.js';
-import { applyMove, applyAttack, applyAlly, applyBetray, applyUseArtifact, pickRandomAction } from './game/actions.js';
+import { applyMove, applyAttack, applyAlly, applyBetray, applyUseArtifact } from './game/actions.js';
 import { checkZoneShrink, applyZoneDamage } from './game/zone.js';
 import { buildPrompt, parseResponse, resolveAction } from './prompts.js';
 
 const STUNNED_THINKING = 'CONNECTION LOST...';
 const INVALID_THINKING = 'CONFUSED...';
-const MAX_CONSECUTIVE_FAILURES = 3;
 const MAX_RESPONSE_TOKENS = 150;
 
 const RECENT_EVENTS_LIMIT = 12;
@@ -77,10 +76,6 @@ export async function runBattle(meta, agents, { onEvent, turnPauseMs = 0, memori
 }
 
 async function executeTurn(state, agent, agentInstance, agentMemories, recentEvents, standings) {
-  if (agent.autopilot) {
-    return executeAutopilot(state, agent);
-  }
-
   const prompt = buildPrompt(state, agent, agentMemories, recentEvents, standings);
   const callOpts = {
     timeout: state.rules.apiTimeoutMs,
@@ -93,21 +88,9 @@ async function executeTurn(state, agent, agentInstance, agentMemories, recentEve
   try {
     response = await agentInstance.call(prompt, callOpts);
   } catch (err) {
-    console.error(`[${agent.id}] API call failed: ${err.message}`);
-    try {
-      response = await agentInstance.call(prompt, callOpts);
-    } catch (retryErr) {
-      console.error(`[${agent.id}] retry failed: ${retryErr.message}`);
-      agent.consecutiveFailures++;
-      if (agent.consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {
-        agent.autopilot = true;
-        console.error(`[${agent.id}] entering autopilot after ${MAX_CONSECUTIVE_FAILURES} consecutive failures`);
-      }
-      return { action: { type: 'STUNNED' }, thinking: STUNNED_THINKING, latencyMs: 0 };
-    }
+    console.error(`[${agent.id}] API error, stunned: ${err.message}`);
+    return { action: { type: 'STUNNED' }, thinking: STUNNED_THINKING, latencyMs: 0 };
   }
-
-  agent.consecutiveFailures = 0;
 
   const parsed = parseResponse(response.text);
   if (!parsed) {
@@ -125,11 +108,6 @@ async function executeTurn(state, agent, agentInstance, agentMemories, recentEve
     latencyMs: response.latencyMs,
     tokensUsed: response.usage,
   };
-}
-
-function executeAutopilot(state, agent) {
-  const action = pickRandomAction(agent, state.agents, state.artifacts, state.rules.attackRange);
-  return { action, thinking: 'AUTOPILOT ENGAGED...', latencyMs: 0 };
 }
 
 function applyTurnResult(state, agentId, turnResult) {
@@ -161,6 +139,8 @@ function applyTurnResult(state, agentId, turnResult) {
       if (result.artifacts) state.artifacts = result.artifacts;
       break;
     case 'STUNNED':
+      result = { event: { type: 'stunned', agent: agentId } };
+      break;
     case 'INVALID':
       break;
   }

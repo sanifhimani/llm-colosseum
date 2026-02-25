@@ -2,7 +2,7 @@ import { ROSTER } from '../state/roster';
 
 const AGENT_NAMES = Object.fromEntries(ROSTER.map((r) => [r.id, r.name]));
 const SUFFIX = ' - LLM Colosseum';
-const BASE_URL = 'https://llmcolosseum.dev';
+const BASE_URL = import.meta.env.VITE_SITE_URL || 'https://llmcolosseum.dev';
 
 function setCanonical(pathname) {
   const href = `${BASE_URL}${pathname === '/' ? '' : pathname}`;

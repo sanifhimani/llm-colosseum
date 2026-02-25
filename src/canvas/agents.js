@@ -6,7 +6,7 @@ const SPRITE_SCALE = 2.5;
 const SPRITE_WIDTH = 8;
 const SPRITE_HEIGHT = 10;
 
-export function drawAgent(ctx, agent) {
+export function drawAgent(ctx, agent, stunned = false) {
   if (!agent.alive) return;
 
   const [r, c] = agent.pos;
@@ -14,6 +14,12 @@ export function drawAgent(ctx, agent) {
   const y = r * CELL_SIZE;
   const cx = x + CELL_SIZE / 2;
   const cy = y + CELL_SIZE / 2;
+
+  if (stunned) {
+    const blink = Math.sin(Date.now() / 150) * 0.5 + 0.5;
+    ctx.save();
+    ctx.globalAlpha = 0.25 + blink * 0.35;
+  }
 
   ctx.fillStyle = 'rgba(0,0,0,0.4)';
   ctx.fillRect(cx - 10, cy + 10, 20, 6);
@@ -35,6 +41,10 @@ export function drawAgent(ctx, agent) {
   ctx.strokeStyle = '#444';
   ctx.lineWidth = 1;
   ctx.strokeRect(bx, by, barWidth, 5);
+
+  if (stunned) {
+    ctx.restore();
+  }
 }
 
 export function drawDead(ctx, agent) {
@@ -72,6 +82,23 @@ export function drawThinking(ctx, agent, now) {
     ctx.fillStyle = agent.color;
     ctx.fillRect(startX + i * gap - dotSize / 2, baseY - dotSize / 2, dotSize, dotSize);
   }
+  ctx.restore();
+}
+
+export function drawStunned(ctx, agent, now) {
+  const [r, c] = agent.pos;
+  const cx = c * CELL_SIZE + CELL_SIZE / 2;
+  const cy = r * CELL_SIZE;
+
+  const flash = Math.floor(now / 400) % 2 === 0;
+  const alpha = flash ? 1.0 : 0.4;
+
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.font = '7px "Press Start 2P", monospace';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#e83838';
+  ctx.fillText('X X', cx, cy + 4);
   ctx.restore();
 }
 

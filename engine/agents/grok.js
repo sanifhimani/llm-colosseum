@@ -10,7 +10,7 @@ export class GrokAgent extends BaseAgent {
     });
   }
 
-  async call(prompt, { timeout = 15000, maxTokens = 150 } = {}) {
+  async call(prompt, { timeout = 15000, maxTokens = 300 } = {}) {
     const start = Date.now();
     const response = await this.client.chat.completions.create({
       model: this.model,

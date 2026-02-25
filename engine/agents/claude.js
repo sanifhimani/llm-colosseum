@@ -7,7 +7,7 @@ export class ClaudeAgent extends BaseAgent {
     this.client = new Anthropic();
   }
 
-  async call(prompt, { timeout = 15000, maxTokens = 150 } = {}) {
+  async call(prompt, { timeout = 15000, maxTokens = 300 } = {}) {
     const start = Date.now();
     const response = await this.client.messages.create({
       model: this.model,

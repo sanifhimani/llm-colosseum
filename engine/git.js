@@ -57,7 +57,8 @@ export async function initGit(repoRoot) {
       console.log('[git] initialized repo');
     }
 
-    const remoteUrl = `https://x-access-token:${token}@github.com/${repo}.git`;
+    const remoteUrl = `https://github.com/${repo}.git`;
+    const authHeader = `AUTHORIZATION: basic ${Buffer.from(`x-access-token:${token}`).toString('base64')}`;
 
     const remotes = await git(['remote'], repoRoot);
     if (remotes.includes('origin')) {
@@ -65,6 +66,8 @@ export async function initGit(repoRoot) {
     } else {
       await git(['remote', 'add', 'origin', remoteUrl], repoRoot);
     }
+
+    await git(['config', 'http.extraheader', authHeader], repoRoot);
 
     await git(['fetch', 'origin', 'main'], repoRoot);
     await git(['reset', '--mixed', 'origin/main'], repoRoot);

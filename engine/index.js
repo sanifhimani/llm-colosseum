@@ -20,7 +20,9 @@ const REPO_ROOT = resolve(DATA_DIR, '..');
 
 await initGit(REPO_ROOT);
 
-app.use('*', cors());
+app.use('*', cors({
+  origin: ['https://llmcolosseum.dev', 'http://localhost:5173'],
+}));
 app.route('/api', createDataRoutes(DATA_DIR));
 
 const viewers = new Set();
@@ -52,6 +54,7 @@ app.post('/api/trigger', async (c) => {
     return c.json({ error: 'battle already in progress' }, 409);
   }
 
+  activeBattle = { turn: 0, startedAt: new Date().toISOString() };
   startBattle();
   return c.json({ started: true });
 });
@@ -74,7 +77,6 @@ async function startBattle() {
     const memories = loadMemories(DATA_DIR, meta.season);
     const standings = loadStandings(DATA_DIR, meta.season);
 
-    activeBattle = { turn: 0, startedAt: new Date().toISOString() };
     lastBattleState = null;
 
     const eventLog = [];

@@ -26,8 +26,14 @@ jobs:
           VITE_API_BASE: ${{ vars.VITE_API_BASE }}
           VITE_WS_URL: ${{ vars.VITE_WS_URL }}
 
+      - name: Create Pages project if needed
+        run: bunx wrangler pages project create llm-colosseum --production-branch main || true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+
       - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=llm-colosseum
+          command: pages deploy dist --project-name=llm-colosseum --commit-dirty=true

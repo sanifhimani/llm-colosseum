@@ -71,6 +71,7 @@ export async function initGit(repoRoot) {
 
     await git(['fetch', 'origin', 'main'], repoRoot);
     await git(['reset', '--mixed', 'origin/main'], repoRoot);
+    await git(['branch', '-M', 'main'], repoRoot);
 
     await git(['config', 'user.email', 'engine@llm-colosseum.dev'], repoRoot);
     await git(['config', 'user.name', 'LLM Colosseum Engine'], repoRoot);
@@ -99,6 +100,7 @@ export async function commitAndPush(repoRoot, message) {
     }
 
     await git(['commit', '-m', message], repoRoot);
+    await git(['checkout', '--', '.'], repoRoot);
     await git(['pull', '--rebase', 'origin', 'main'], repoRoot);
     await git(['push', 'origin', 'main'], repoRoot);
 

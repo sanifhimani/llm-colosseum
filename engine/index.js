@@ -90,11 +90,12 @@ async function startBattle() {
     }
     lastBattleState = null;
 
+    const day = nextDayNumber(DATA_DIR, meta.season);
     const eventLog = [];
     const turnLog = [];
 
     const memCount = Object.values(memories).reduce((sum, m) => sum + m.length, 0);
-    console.log(`[battle] starting (${useMock ? 'mock' : 'live'} agents, ${memCount} total memories loaded)`);
+    console.log(`[battle] starting day ${day} (${useMock ? 'mock' : 'live'} agents, ${memCount} total memories loaded)`);
 
     const battleResult = await runBattle(meta, agents, {
       turnPauseMs: meta.rules.turnPauseMs || 0,
@@ -119,7 +120,11 @@ async function startBattle() {
             tokensUsed: event.tokensUsed,
           });
         }
-        broadcast(event);
+        if (event.type === 'battle_end') {
+          broadcast({ ...event, day, season: meta.season });
+        } else {
+          broadcast(event);
+        }
       },
     });
 
@@ -127,7 +132,6 @@ async function startBattle() {
     console.log(`[battle] ended -- winner: ${winner?.name || 'none'} after ${turns} turns`);
 
     try {
-      const day = nextDayNumber(DATA_DIR, meta.season);
       const transcript = buildTranscript(day, meta.season, battleResult, turnLog, eventLog);
       const filePath = writeTranscript(DATA_DIR, meta.season, transcript);
       console.log(`[persist] transcript written: ${filePath}`);

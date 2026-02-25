@@ -135,7 +135,7 @@ export default function useBattleSocket({ update }, wsUrl) {
           const victoryEvent = { id: seq, type: 'victory', agent: data.winner.id, turn: data.turns };
           next.eventSeq = seq;
           next.events = truncateEvents([...next.events, victoryEvent]);
-          next.victory = extractBattleStats(next.events);
+          next.victory = extractBattleStats(next.events, { winnerHp: data.winner.hp, day: data.day, season: data.season });
         }
         return next;
       });

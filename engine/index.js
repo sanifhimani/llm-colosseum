@@ -77,6 +77,9 @@ async function startBattle() {
     const memories = loadMemories(DATA_DIR, meta.season);
     const standings = loadStandings(DATA_DIR, meta.season);
 
+    if (!activeBattle) {
+      activeBattle = { turn: 0, startedAt: new Date().toISOString() };
+    }
     lastBattleState = null;
 
     const eventLog = [];

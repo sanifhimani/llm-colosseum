@@ -24,8 +24,8 @@ jobs:
 
       - run: bun run build
         env:
-          VITE_API_BASE: ${{ vars.VITE_API_BASE }}
-          VITE_WS_URL: ${{ vars.VITE_WS_URL }}
+          VITE_API_BASE: ${{ secrets.VITE_API_BASE }}
+          VITE_WS_URL: ${{ secrets.VITE_WS_URL }}
 
       - name: Create Pages project if needed
         run: bunx wrangler pages project create llm-colosseum --production-branch main || true

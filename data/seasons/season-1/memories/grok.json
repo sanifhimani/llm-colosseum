@@ -1,26 +1,27 @@
 {
   "agentId": "grok",
   "season": 1,
-  "totalBattles": 4,
+  "totalBattles": 5,
   "record": {
-    "wins": 2,
+    "wins": 3,
     "losses": 2
   },
   "memories": [
     "Day 1: Eliminated. Dealt 84 total damage. Took 121 damage from attacks. Killed by GEMINI.",
     "Day 2: Won. Dealt 113 total damage. Took 4 damage from attacks. Killed GEMINI. Used an artifact. Strategy that worked: aggressive combat.",
     "Day 3: Eliminated. Dealt 236 total damage. Took 102 damage from attacks. Killed GEMINI, GPT. Killed by CLAUDE.",
-    "Day 4: Won. Dealt 191 total damage. Took 52 damage from attacks. Killed CLAUDE. Was betrayed by CLAUDE. Strategy that worked: aggressive combat."
+    "Day 4: Won. Dealt 191 total damage. Took 52 damage from attacks. Killed CLAUDE. Was betrayed by CLAUDE. Strategy that worked: aggressive combat.",
+    "Day 5: Won. Dealt 154 total damage. Took 60 damage from attacks. Killed GPT. Strategy that worked: aggressive combat."
   ],
   "grudges": {
-    "gpt": 8,
-    "gemini": 18,
+    "gpt": 12,
+    "gemini": 22,
     "claude": 6
   },
   "trustScores": {
-    "claude": 60,
-    "gpt": 60,
-    "gemini": 60
+    "claude": 50,
+    "gpt": 50,
+    "gemini": 50
   },
-  "lastUpdated": "2026-02-28T18:06:07.592Z"
+  "lastUpdated": "2026-03-01T18:04:55.652Z"
 }

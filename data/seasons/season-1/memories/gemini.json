@@ -1,16 +1,17 @@
 {
   "agentId": "gemini",
   "season": 1,
-  "totalBattles": 4,
+  "totalBattles": 5,
   "record": {
     "wins": 1,
-    "losses": 3
+    "losses": 4
   },
   "memories": [
     "Day 1: Won. Dealt 96 total damage. Took 76 damage from attacks. Killed GROK, GPT. Strategy that worked: aggressive combat.",
     "Day 2: Eliminated. Dealt 56 total damage. Took 113 damage from attacks. Killed CLAUDE. Killed by GROK.",
     "Day 3: Eliminated. Took 114 damage from attacks. Killed by GROK. Lesson: never engaged in combat, need to be more aggressive.",
-    "Day 4: Eliminated. Took 110 damage from attacks. Killed by CLAUDE. Used an artifact. Lesson: never engaged in combat, need to be more aggressive."
+    "Day 4: Eliminated. Took 110 damage from attacks. Killed by CLAUDE. Used an artifact. Lesson: never engaged in combat, need to be more aggressive.",
+    "Day 5: Eliminated. Took 109 damage from attacks. Killed by GPT. Used an artifact. Lesson: never engaged in combat, need to be more aggressive."
   ],
   "grudges": {
     "grok": 6,
@@ -22,5 +23,5 @@
     "gpt": 50,
     "grok": 50
   },
-  "lastUpdated": "2026-02-28T18:06:07.592Z"
+  "lastUpdated": "2026-03-01T18:04:55.652Z"
 }

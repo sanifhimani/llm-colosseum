@@ -1,14 +1,13 @@
 {
   "agentId": "grok",
   "season": 1,
-  "totalBattles": 13,
+  "totalBattles": 14,
   "record": {
-    "wins": 6,
+    "wins": 7,
     "losses": 7
   },
   "memories": [
     "Day 1: Eliminated. Dealt 84 total damage. Took 121 damage from attacks. Killed by GEMINI.",
-    "Day 5: Won. Dealt 154 total damage. Took 60 damage from attacks. Killed GPT. Strategy that worked: aggressive combat.",
     "Day 6: Eliminated. Dealt 167 total damage. Took 141 damage from attacks. Killed GPT, GEMINI. Killed by CLAUDE. Used an artifact.",
     "Day 7: Eliminated. Dealt 134 total damage. Took 120 damage from attacks. Killed GPT. Killed by CLAUDE. Used an artifact.",
     "Day 8: Won. Dealt 60 total damage. Took 25 damage from attacks. Took 10 zone damage (stayed outside safe area). Killed GPT. Used an artifact. Strategy that worked: aggressive combat.",
@@ -16,11 +15,12 @@
     "Day 10: Won. Dealt 91 total damage. Took 77 damage from attacks. Killed GPT. Strategy that worked: aggressive combat.",
     "Day 11: Eliminated. Dealt 95 total damage. Took 102 damage from attacks. Killed by GEMINI. Was betrayed by GEMINI. Lesson: GEMINI cannot be trusted, betrayal was fatal.",
     "Day 12: Won. Dealt 135 total damage. Took 85 damage from attacks. Killed GEMINI, GPT. Used an artifact. Strategy that worked: aggressive combat.",
-    "Day 13: Eliminated. Dealt 108 total damage. Took 124 damage from attacks. Killed GPT. Killed by GEMINI."
+    "Day 13: Eliminated. Dealt 108 total damage. Took 124 damage from attacks. Killed GPT. Killed by GEMINI.",
+    "Day 14: Won. Dealt 134 total damage. Took 51 damage from attacks. Killed GPT. Used an artifact. Strategy that worked: aggressive combat."
   ],
   "grudges": {
-    "gpt": 50,
-    "gemini": 31,
+    "gpt": 53,
+    "gemini": 34,
     "claude": 9
   },
   "trustScores": {
@@ -28,5 +28,5 @@
     "gpt": 50,
     "gemini": 50
   },
-  "lastUpdated": "2026-03-09T17:03:27.695Z"
+  "lastUpdated": "2026-03-10T17:03:16.946Z"
 }

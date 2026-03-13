@@ -1,0 +1,1901 @@
+{
+  "season": 1,
+  "day": 17,
+  "date": "2026-03-13",
+  "startedAt": "2026-03-13T17:00:00.854Z",
+  "endedAt": "2026-03-13T17:04:16.722Z",
+  "winner": "grok",
+  "placement": [
+    "grok",
+    "gemini",
+    "gpt",
+    "claude"
+  ],
+  "roster": [
+    {
+      "id": "claude",
+      "model": "claude-opus-4-6",
+      "startHp": 100
+    },
+    {
+      "id": "gpt",
+      "model": "gpt-5.2",
+      "startHp": 100
+    },
+    {
+      "id": "gemini",
+      "model": "gemini-3.1-pro-preview",
+      "startHp": 100
+    },
+    {
+      "id": "grok",
+      "model": "grok-4-1-fast-non-reasoning",
+      "startHp": 100
+    }
+  ],
+  "artifacts": [
+    {
+      "type": "weapon",
+      "name": "BLADE",
+      "pos": [
+        7,
+        4
+      ]
+    },
+    {
+      "type": "shield",
+      "name": "WARD",
+      "pos": [
+        4,
+        5
+      ]
+    },
+    {
+      "type": "potion",
+      "name": "ELIXIR",
+      "pos": [
+        3,
+        3
+      ]
+    }
+  ],
+  "turns": [
+    {
+      "turn": 0,
+      "agent": "claude",
+      "action": {
+        "type": "MOVE",
+        "direction": "S"
+      },
+      "thinking": "The ELIXIR at [3,3] is closest at distance 4 - I need to grab artifacts early to gain an advantage, and moving SE toward it also positions me toward the center where I can be aggressive.",
+      "event": {
+        "type": "move",
+        "agent": "claude",
+        "direction": "S"
+      },
+      "latencyMs": 3893,
+      "tokensUsed": {
+        "input": 950,
+        "output": 59
+      }
+    },
+    {
+      "turn": 1,
+      "agent": "gpt",
+      "action": {
+        "type": "MOVE",
+        "direction": "W"
+      },
+      "thinking": "I need power fast and the closest useful pickup is the WARD, so I’ll start heading toward it while keeping distance from GROK.",
+      "event": {
+        "type": "move",
+        "agent": "gpt",
+        "direction": "W"
+      },
+      "latencyMs": 2465,
+      "tokensUsed": {
+        "input": 875,
+        "output": 38
+      }
+    },
+    {
+      "turn": 2,
+      "agent": "gemini",
+      "action": {
+        "type": "MOVE",
+        "direction": "E"
+      },
+      "thinking": "I'm heading towards the BLADE at [7,4] to fuel my aggressive combat strategy.",
+      "event": {
+        "type": "move",
+        "agent": "gemini",
+        "direction": "E"
+      },
+      "latencyMs": 3185,
+      "tokensUsed": {
+        "input": 915,
+        "output": 29
+      }
+    },
+    {
+      "turn": 3,
+      "agent": "grok",
+      "action": {
+        "type": "MOVE",
+        "direction": "W"
+      },
+      "thinking": "Gemini is closest with a bad H2H record against me and history of betrayal, so close the distance aggressively to engage them before they predict my pattern.",
+      "event": {
+        "type": "move",
+        "agent": "grok",
+        "direction": "W"
+      },
+      "latencyMs": 710,
+      "tokensUsed": {
+        "input": 1011,
+        "output": 38
+      }
+    },
+    {
+      "turn": 4,
+      "agent": "claude",
+      "action": {
+        "type": "MOVE",
+        "direction": "S"
+      },
+      "thinking": "The ELIXIR is only 3 distance away at [3,3] - I should grab it to power up before engaging anyone, and my winning days involved artifacts and aggressive combat.",
+      "event": {
+        "type": "move",
+        "agent": "claude",
+        "direction": "S"
+      },
+      "latencyMs": 3119,
+      "tokensUsed": {
+        "input": 985,
+        "output": 52
+      }
+    },
+    {
+      "turn": 5,
+      "agent": "gpt",
+      "action": {
+        "type": "MOVE",
+        "direction": "W"
+      },
+      "thinking": "GROK is closest and historically my worst matchup, so I should move to increase distance and angle toward the WARD for defense.",
+      "event": {
+        "type": "move",
+        "agent": "gpt",
+        "direction": "W"
+      },
+      "latencyMs": 3895,
+      "tokensUsed": {
+        "input": 907,
+        "output": 36
+      }
+    },
+    {
+      "turn": 6,
+      "agent": "gemini",
+      "action": {
+        "type": "MOVE",
+        "direction": "N"
+      },
+      "thinking": "I will head North towards the BLADE at [7,4] to increase my offensive capabilities for the upcoming battles.",
+      "event": {
+        "type": "move",
+        "agent": "gemini",
+        "direction": "N"
+      },
+      "latencyMs": 2901,
+      "tokensUsed": {
+        "input": 948,
+        "output": 32
+      }
+    },
+    {
+      "turn": 7,
+      "agent": "grok",
+      "action": {
+        "type": "MOVE",
+        "direction": "N"
+      },
+      "thinking": "GEMINI is closest at DIST:8 with a history of betrayals and losses to me; move N to close distance for aggressive combat advantage.",
+      "event": {
+        "type": "move",
+        "agent": "grok",
+        "direction": "N"
+      },
+      "latencyMs": 600,
+      "tokensUsed": {
+        "input": 1045,
+        "output": 36
+      }
+    },
+    {
+      "turn": 8,
+      "agent": "claude",
+      "action": {
+        "type": "MOVE",
+        "direction": "E"
+      },
+      "thinking": "The ELIXIR is only 2 tiles east at [3,3] - I should grab it to boost my power before engaging anyone, as artifacts have been key to my wins.",
+      "event": {
+        "type": "move",
+        "agent": "claude",
+        "direction": "E"
+      },
+      "latencyMs": 3103,
+      "tokensUsed": {
+        "input": 1016,
+        "output": 52
+      }
+    },
+    {
+      "turn": 9,
+      "agent": "gpt",
+      "action": {
+        "type": "MOVE",
+        "direction": "S"
+      },
+      "thinking": "I should secure the nearby WARD artifact first to improve survivability before engaging anyone, especially GROK.",
+      "event": {
+        "type": "move",
+        "agent": "gpt",
+        "direction": "S"
+      },
+      "latencyMs": 1598,
+      "tokensUsed": {
+        "input": 942,
+        "output": 31
+      }
+    },
+    {
+      "turn": 10,
+      "agent": "gemini",
+      "action": {
+        "type": "MOVE",
+        "direction": "N"
+      },
+      "thinking": "I need to secure the BLADE at [7,4] to enhance my combat capabilities and pursue my aggressive strategy.",
+      "event": {
+        "type": "move",
+        "agent": "gemini",
+        "direction": "N"
+      },
+      "latencyMs": 3600,
+      "tokensUsed": {
+        "input": 976,
+        "output": 32
+      }
+    },
+    {
+      "turn": 11,
+      "agent": "grok",
+      "action": {
+        "type": "INVALID"
+      },
+      "thinking": "CONFUSED...",
+      "event": null,
+      "latencyMs": 963,
+      "tokensUsed": {
+        "input": 1076,
+        "output": 51
+      }
+    },
+    {
+      "turn": 12,
+      "agent": "claude",
+      "action": {
+        "type": "MOVE",
+        "direction": "E"
+      },
+      "thinking": "The ELIXIR is just 1 step east at [3,3] - I should grab it immediately to power up before engaging anyone, as artifacts have been key in my wins.",
+      "event": {
+        "type": "move",
+        "agent": "claude",
+        "direction": "E"
+      },
+      "latencyMs": 3283,
+      "tokensUsed": {
+        "input": 1051,
+        "output": 52
+      }
+    },
+    {
+      "turn": 13,
+      "agent": "gpt",
+      "action": {
+        "type": "MOVE",
+        "direction": "S"
+      },
+      "thinking": "I should grab the nearby WARD to improve survivability before engaging anyone, especially Grok.",
+      "event": {
+        "type": "move",
+        "agent": "gpt",
+        "direction": "S"
+      },
+      "latencyMs": 2734,
+      "tokensUsed": {
+        "input": 968,
+        "output": 29
+      }
+    },
+    {
+      "turn": 14,
+      "agent": "gemini",
+      "action": {
+        "type": "MOVE",
+        "direction": "E"
+      },
+      "thinking": "I need to secure the BLADE at [7,4] to bolster my offensive capabilities, so I will move East towards it.",
+      "event": {
+        "type": "move",
+        "agent": "gemini",
+        "direction": "E"
+      },
+      "latencyMs": 4101,
+      "tokensUsed": {
+        "input": 1006,
+        "output": 35
+      }
+    },
+    {
+      "turn": 15,
+      "agent": "grok",
+      "action": {
+        "type": "INVALID"
+      },
+      "thinking": "CONFUSED...",
+      "event": null,
+      "latencyMs": 565,
+      "tokensUsed": {
+        "input": 1087,
+        "output": 27
+      }
+    },
+    {
+      "turn": 16,
+      "agent": "claude",
+      "action": {
+        "type": "USE_ARTIFACT"
+      },
+      "thinking": "There's an ELIXIR right on my cell - I should grab it now before moving toward the WARD or BLADE, as artifacts have been key to my victories.",
+      "event": {
+        "type": "artifact",
+        "agent": "claude",
+        "artifact": "ELIXIR"
+      },
+      "latencyMs": 2951,
+      "tokensUsed": {
+        "input": 1058,
+        "output": 50
+      }
+    },
+    {
+      "turn": 17,
+      "agent": "gpt",
+      "action": {
+        "type": "MOVE",
+        "direction": "W"
+      },
+      "thinking": "I should grab the nearby WARD for defense before engaging any opponent, since Claude is closer and already armed.",
+      "event": {
+        "type": "move",
+        "agent": "gpt",
+        "direction": "W"
+      },
+      "latencyMs": 1082,
+      "tokensUsed": {
+        "input": 950,
+        "output": 32
+      }
+    },
+    {
+      "turn": 18,
+      "agent": "gemini",
+      "action": {
+        "type": "MOVE",
+        "direction": "N"
+      },
+      "thinking": "The BLADE is at [7,4], so I will move North to [7,3] to set up an easy grab next turn and prepare for the inevitable aggressive combat that has won me games in the past.",
+      "event": {
+        "type": "move",
+        "agent": "gemini",
+        "direction": "N"
+      },
+      "latencyMs": 4148,
+      "tokensUsed": {
+        "input": 992,
+        "output": 53
+      }
+    },
+    {
+      "turn": 19,
+      "agent": "grok",
+      "action": {
+        "type": "MOVE",
+        "direction": "N"
+      },
+      "thinking": "Gemini is closest at DIST:8 and I've dominated them historically (5-3 H2H), so move northwest towards [7,3] to close for aggressive combat.",
+      "event": {
+        "type": "move",
+        "agent": "grok",
+        "direction": "N"
+      },
+      "latencyMs": 899,
+      "tokensUsed": {
+        "input": 1072,
+        "output": 42
+      }
+    },
+    {
+      "turn": 20,
+      "agent": "claude",
+      "action": {
+        "type": "MOVE",
+        "direction": "S"
+      },
+      "thinking": "The WARD artifact is at [4,5], just 3 distance away (1S, 2E), and picking up a defensive artifact would give me a significant advantage before engaging anyone - I should move toward it.",
+      "event": {
+        "type": "move",
+        "agent": "claude",
+        "direction": "S"
+      },
+      "latencyMs": 3162,
+      "tokensUsed": {
+        "input": 1034,
+        "output": 59
+      }
+    },
+    {
+      "turn": 21,
+      "agent": "gpt",
+      "action": {
+        "type": "MOVE",
+        "direction": "S"
+      },
+      "thinking": "Grabbing the nearby WARD first should boost my survivability before any close engagement or betrayal attempts.",
+      "event": {
+        "type": "move",
+        "agent": "gpt",
+        "direction": "S"
+      },
+      "latencyMs": 2030,
+      "tokensUsed": {
+        "input": 953,
+        "output": 30
+      }
+    },
+    {
+      "turn": 22,
+      "agent": "gemini",
+      "action": {
+        "type": "MOVE",
+        "direction": "E"
+      },
+      "thinking": "The BLADE is just one step east of me, and obtaining it will perfectly support my aggressive strategy.",
+      "event": {
+        "type": "move",
+        "agent": "gemini",
+        "direction": "E"
+      },
+      "latencyMs": 3573,
+      "tokensUsed": {
+        "input": 1001,
+        "output": 29
+      }
+    },
+    {
+      "turn": 23,
+      "agent": "grok",
+      "action": {
+        "type": "INVALID"
+      },
+      "thinking": "CONFUSED...",
+      "event": null,
+      "latencyMs": 851,
+      "tokensUsed": {
+        "input": 1072,
+        "output": 38
+      }
+    },
+    {
+      "turn": 24,
+      "agent": "claude",
+      "action": {
+        "type": "MOVE",
+        "direction": "E"
+      },
+      "thinking": "The WARD artifact is 2 tiles east at [4,5], and GPT is at [4,7] also moving in that direction - I should grab the WARD first to power up before engaging, since artifacts have been key to my wins.",
+      "event": {
+        "type": "move",
+        "agent": "claude",
+        "direction": "E"
+      },
+      "latencyMs": 3835,
+      "tokensUsed": {
+        "input": 1034,
+        "output": 66
+      }
+    },
+    {
+      "turn": 25,
+      "agent": "gpt",
+      "action": {
+        "type": "MOVE",
+        "direction": "W"
+      },
+      "thinking": "I should grab the nearby WARD to boost survivability while staying out of immediate melee pressure.",
+      "event": {
+        "type": "move",
+        "agent": "gpt",
+        "direction": "W"
+      },
+      "latencyMs": 1091,
+      "tokensUsed": {
+        "input": 956,
+        "output": 30
+      }
+    },
+    {
+      "turn": 26,
+      "agent": "gemini",
+      "action": {
+        "type": "INVALID"
+      },
+      "thinking": "CONFUSED...",
+      "event": null,
+      "latencyMs": 5324,
+      "tokensUsed": {
+        "input": 1005,
+        "output": 28
+      }
+    },
+    {
+      "turn": 27,
+      "agent": "grok",
+      "action": {
+        "type": "INVALID"
+      },
+      "thinking": "CONFUSED...",
+      "event": null,
+      "latencyMs": 621,
+      "tokensUsed": {
+        "input": 1075,
+        "output": 41
+      }
+    },
+    {
+      "turn": 28,
+      "agent": "claude",
+      "action": {
+        "type": "MOVE",
+        "direction": "E"
+      },
+      "thinking": "The WARD artifact is just 1 step east at [4,5], which would give me a defensive advantage - I should grab it before engaging anyone, especially since GPT is only 2 away and could attack me.",
+      "event": {
+        "type": "move",
+        "agent": "claude",
+        "direction": "E"
+      },
+      "latencyMs": 3225,
+      "tokensUsed": {
+        "input": 1051,
+        "output": 60
+      }
+    },
+    {
+      "turn": 29,
+      "agent": "gpt",
+      "action": {
+        "type": "ATTACK",
+        "target": "claude"
+      },
+      "thinking": "Claude is adjacent and sitting on the WARD, so I should take them out before they can leverage it or betray me later.",
+      "event": {
+        "type": "attack",
+        "agent": "gpt",
+        "target": "claude",
+        "damage": 29
+      },
+      "latencyMs": 1787,
+      "tokensUsed": {
+        "input": 954,
+        "output": 39
+      }
+    },
+    {
+      "turn": 30,
+      "agent": "gemini",
+      "action": {
+        "type": "USE_ARTIFACT"
+      },
+      "thinking": "The BLADE is right under my feet, so I will claim it to bolster my offensive capabilities before engaging the distracted opponents to the north.",
+      "event": {
+        "type": "artifact",
+        "agent": "gemini",
+        "artifact": "BLADE"
+      },
+      "latencyMs": 2671,
+      "tokensUsed": {
+        "input": 1008,
+        "output": 37
+      }
+    },
+    {
+      "turn": 31,
+      "agent": "grok",
+      "action": {
+        "type": "INVALID"
+      },
+      "thinking": "CONFUSED...",
+      "event": null,
+      "latencyMs": 929,
+      "tokensUsed": {
+        "input": 1061,
+        "output": 36
+      }
+    },
+    {
+      "turn": 32,
+      "agent": "claude",
+      "action": {
+        "type": "USE_ARTIFACT"
+      },
+      "thinking": "GPT just attacked me for 29 damage and is adjacent - I should USE the WARD artifact at my feet to get a defensive shield before counterattacking, since I'm already at an HP disadvantage.",
+      "event": {
+        "type": "artifact",
+        "agent": "claude",
+        "artifact": "WARD"
+      },
+      "latencyMs": 5416,
+      "tokensUsed": {
+        "input": 1042,
+        "output": 56
+      }
+    },
+    {
+      "turn": 33,
+      "agent": "gpt",
+      "action": {
+        "type": "ATTACK",
+        "target": "claude"
+      },
+      "thinking": "Claude is in range and already wounded, so I should press the advantage and try to eliminate them before others arrive.",
+      "event": {
+        "type": "attack",
+        "agent": "gpt",
+        "target": "claude",
+        "damage": 0
+      },
+      "latencyMs": 1317,
+      "tokensUsed": {
+        "input": 940,
+        "output": 36
+      }
+    },
+    {
+      "turn": 34,
+      "agent": "gemini",
+      "action": {
+        "type": "MOVE",
+        "direction": "N"
+      },
+      "thinking": "Claude is damaged and under attack by GPT, so I'll move North to close the distance and join the fight for a potential kill.",
+      "event": {
+        "type": "move",
+        "agent": "gemini",
+        "direction": "N"
+      },
+      "latencyMs": 3641,
+      "tokensUsed": {
+        "input": 987,
+        "output": 36
+      }
+    },
+    {
+      "turn": 35,
+      "agent": "grok",
+      "action": {
+        "type": "MOVE",
+        "direction": "N"
+      },
+      "thinking": "Opponents are clustered north-west; move N to close distance on closest threats (GPT and GEMINI at dist 7) for aggressive engagement per my winning strategies.",
+      "event": {
+        "type": "move",
+        "agent": "grok",
+        "direction": "N"
+      },
+      "latencyMs": 603,
+      "tokensUsed": {
+        "input": 1056,
+        "output": 40
+      }
+    },
+    {
+      "turn": 36,
+      "agent": "claude",
+      "action": {
+        "type": "ATTACK",
+        "target": "gpt"
+      },
+      "thinking": "GPT is adjacent and already attacked me twice (dealing 29 dmg), I'm at 71 HP while they're at 100 - I need to fight back aggressively since retreating just lets them chase me, and my past wins came from aggressive combat.",
+      "event": {
+        "type": "attack",
+        "agent": "claude",
+        "target": "gpt",
+        "damage": 11
+      },
+      "latencyMs": 3645,
+      "tokensUsed": {
+        "input": 1039,
+        "output": 71
+      }
+    },
+    {
+      "turn": 37,
+      "agent": "gpt",
+      "action": {
+        "type": "ATTACK",
+        "target": "claude"
+      },
+      "thinking": "Claude is adjacent and already hit me, so I should pressure them immediately before others arrive.",
+      "event": {
+        "type": "attack",
+        "agent": "gpt",
+        "target": "claude",
+        "damage": 13
+      },
+      "latencyMs": 1028,
+      "tokensUsed": {
+        "input": 952,
+        "output": 31
+      }
+    },
+    {
+      "turn": 38,
+      "agent": "gemini",
+      "action": {
+        "type": "ATTACK",
+        "target": "claude"
+      },
+      "thinking": "CLAUDE is distracted fighting GPT and sitting at low health; it's time to strike and clean up.",
+      "event": {
+        "type": "attack",
+        "agent": "gemini",
+        "target": "claude",
+        "damage": 19
+      },
+      "latencyMs": 4323,
+      "tokensUsed": {
+        "input": 1003,
+        "output": 34
+      }
+    },
+    {
+      "turn": 39,
+      "agent": "grok",
+      "action": {
+        "type": "ALLY",
+        "target": "claude"
+      },
+      "thinking": "Claude is low HP and getting focused by others, so ally with them to split enemies and set up a counterattack while staying safe.",
+      "event": {
+        "type": "ally_propose",
+        "agent": "grok",
+        "target": "claude"
+      },
+      "latencyMs": 695,
+      "tokensUsed": {
+        "input": 1064,
+        "output": 36
+      }
+    },
+    {
+      "turn": 40,
+      "agent": "claude",
+      "action": {
+        "type": "ALLY",
+        "target": "grok"
+      },
+      "thinking": "I'm at 39 HP with GPT (89 HP) adjacent and GEMINI (100 HP) at range 3 - both attacking me; I need to escape this 2v1 situation, and GROK just proposed an alliance which could help me survive, so I should accept and reposition.",
+      "event": {
+        "type": "alliance",
+        "agent": "claude",
+        "target": "grok"
+      },
+      "latencyMs": 3522,
+      "tokensUsed": {
+        "input": 1066,
+        "output": 83
+      }
+    },
+    {
+      "turn": 41,
+      "agent": "gpt",
+      "action": {
+        "type": "ATTACK",
+        "target": "claude"
+      },
+      "thinking": "Claude is low HP and already in-range, so I should finish them before any alliance shenanigans form.",
+      "event": {
+        "type": "attack",
+        "agent": "gpt",
+        "target": "claude",
+        "damage": 9
+      },
+      "latencyMs": 1885,
+      "tokensUsed": {
+        "input": 965,
+        "output": 35
+      }
+    },
+    {
+      "turn": 42,
+      "agent": "gemini",
+      "action": {
+        "type": "ATTACK",
+        "target": "claude"
+      },
+      "thinking": "CLAUDE is critically low on health and within my striking range, making them the perfect target for elimination.",
+      "event": {
+        "type": "attack",
+        "agent": "gemini",
+        "target": "claude",
+        "damage": 19
+      },
+      "latencyMs": 3925,
+      "tokensUsed": {
+        "input": 1013,
+        "output": 33
+      }
+    },
+    {
+      "turn": 43,
+      "agent": "grok",
+      "action": {
+        "type": "INVALID"
+      },
+      "thinking": "CONFUSED...",
+      "event": null,
+      "latencyMs": 664,
+      "tokensUsed": {
+        "input": 1070,
+        "output": 40
+      }
+    },
+    {
+      "turn": 44,
+      "agent": "claude",
+      "action": {
+        "type": "MOVE",
+        "direction": "W"
+      },
+      "thinking": "I'm at 11 HP with GPT adjacent and both GPT and GEMINI hammering me - I need to flee to survive since staying means certain death next turn.",
+      "event": {
+        "type": "move",
+        "agent": "claude",
+        "direction": "W"
+      },
+      "latencyMs": 2711,
+      "tokensUsed": {
+        "input": 1076,
+        "output": 49
+      }
+    },
+    {
+      "turn": 45,
+      "agent": "gpt",
+      "action": {
+        "type": "ATTACK",
+        "target": "claude"
+      },
+      "thinking": "Claude is low and in-range, so I should finish them before they escape or someone else claims the kill.",
+      "event": {
+        "type": "kill",
+        "agent": "gpt",
+        "target": "claude",
+        "damage": 15
+      },
+      "latencyMs": 1736,
+      "tokensUsed": {
+        "input": 970,
+        "output": 35
+      }
+    },
+    {
+      "turn": 46,
+      "agent": "gemini",
+      "action": {
+        "type": "MOVE",
+        "direction": "N"
+      },
+      "thinking": "Claude is gone, so I will advance North to close the distance to GPT and continue my aggressive strategy.",
+      "event": {
+        "type": "move",
+        "agent": "gemini",
+        "direction": "N"
+      },
+      "latencyMs": 3975,
+      "tokensUsed": {
+        "input": 979,
+        "output": 29
+      }
+    },
+    {
+      "turn": 47,
+      "agent": "grok",
+      "action": {
+        "type": "MOVE",
+        "direction": "N"
+      },
+      "thinking": "Claude is dead, zone safe for now, so close distance to vulnerable GPT (89HP, poor record) for aggressive attack setup while avoiding Gemini.",
+      "event": {
+        "type": "move",
+        "agent": "grok",
+        "direction": "N"
+      },
+      "latencyMs": 822,
+      "tokensUsed": {
+        "input": 1041,
+        "output": 37
+      }
+    },
+    {
+      "turn": 48,
+      "agent": "gpt",
+      "action": {
+        "type": "ATTACK",
+        "target": "gemini"
+      },
+      "thinking": "Gemini is already in range and historically easier for me to finish than Grok, so I’ll pressure them now.",
+      "event": {
+        "type": "attack",
+        "agent": "gpt",
+        "target": "gemini",
+        "damage": 29
+      },
+      "latencyMs": 1190,
+      "tokensUsed": {
+        "input": 944,
+        "output": 36
+      }
+    },
+    {
+      "turn": 49,
+      "agent": "gemini",
+      "action": {
+        "type": "ATTACK",
+        "target": "gpt"
+      },
+      "thinking": "GPT hit me hard last turn, so it's time to return the favor and retaliate aggressively.",
+      "event": {
+        "type": "attack",
+        "agent": "gemini",
+        "target": "gpt",
+        "damage": 29
+      },
+      "latencyMs": 3598,
+      "tokensUsed": {
+        "input": 987,
+        "output": 30
+      }
+    },
+    {
+      "turn": 50,
+      "agent": "grok",
+      "action": {
+        "type": "MOVE",
+        "direction": "N"
+      },
+      "thinking": "GPT is weaker and we've dominated them historically, so close distance to attack while avoiding Gemini's higher HP.",
+      "event": {
+        "type": "move",
+        "agent": "grok",
+        "direction": "N"
+      },
+      "latencyMs": 689,
+      "tokensUsed": {
+        "input": 1041,
+        "output": 28
+      }
+    },
+    {
+      "turn": 51,
+      "agent": "gpt",
+      "action": {
+        "type": "ATTACK",
+        "target": "gemini"
+      },
+      "thinking": "Gemini is already in range and weakened, so I should try to finish them before Grok can capitalize.",
+      "event": {
+        "type": "attack",
+        "agent": "gpt",
+        "target": "gemini",
+        "damage": 21
+      },
+      "latencyMs": 1101,
+      "tokensUsed": {
+        "input": 948,
+        "output": 33
+      }
+    },
+    {
+      "turn": 52,
+      "agent": "gemini",
+      "action": {
+        "type": "ATTACK",
+        "target": "gpt"
+      },
+      "thinking": "GPT is relentless and has heavily damaged me, so I must strike back to survive this duel!",
+      "event": {
+        "type": "attack",
+        "agent": "gemini",
+        "target": "gpt",
+        "damage": 12
+      },
+      "latencyMs": 3928,
+      "tokensUsed": {
+        "input": 981,
+        "output": 28
+      }
+    },
+    {
+      "turn": 53,
+      "agent": "grok",
+      "action": {
+        "type": "MOVE",
+        "direction": "W"
+      },
+      "thinking": "GPT is low HP and I've dominated them historically, so close in aggressively to attack next turn while staying safe.",
+      "event": {
+        "type": "move",
+        "agent": "grok",
+        "direction": "W"
+      },
+      "latencyMs": 1402,
+      "tokensUsed": {
+        "input": 1035,
+        "output": 29
+      }
+    },
+    {
+      "turn": 54,
+      "agent": "gpt",
+      "action": {
+        "type": "ATTACK",
+        "target": "gemini"
+      },
+      "thinking": "If I don’t remove GEMINI now, I risk getting pinched between both enemies while low on HP.",
+      "event": {
+        "type": "attack",
+        "agent": "gpt",
+        "target": "gemini",
+        "damage": 15
+      },
+      "latencyMs": 1336,
+      "tokensUsed": {
+        "input": 949,
+        "output": 34
+      }
+    },
+    {
+      "turn": 55,
+      "agent": "gemini",
+      "action": {
+        "type": "INVALID"
+      },
+      "thinking": "CONFUSED...",
+      "event": null,
+      "latencyMs": 5133,
+      "tokensUsed": {
+        "input": 975,
+        "output": 9
+      }
+    },
+    {
+      "turn": 56,
+      "agent": "grok",
+      "action": {
+        "type": "ATTACK",
+        "target": "gpt"
+      },
+      "thinking": "GPT is low HP and in range while Gemini fumbled and is weaker but farther—finish GPT now before zone shrinks.",
+      "event": {
+        "type": "attack",
+        "agent": "grok",
+        "target": "gpt",
+        "damage": 30
+      },
+      "latencyMs": 598,
+      "tokensUsed": {
+        "input": 1037,
+        "output": 32
+      }
+    },
+    {
+      "turn": 57,
+      "agent": "gpt",
+      "action": {
+        "type": "ATTACK",
+        "target": "gemini"
+      },
+      "thinking": "I’m at 18 HP and can’t survive another GROK hit, so I should try to quickly remove the weaker threat and hope it reduces incoming damage.",
+      "event": {
+        "type": "attack",
+        "agent": "gpt",
+        "target": "gemini",
+        "damage": 16
+      },
+      "latencyMs": 1385,
+      "tokensUsed": {
+        "input": 956,
+        "output": 44
+      }
+    },
+    {
+      "turn": 58,
+      "agent": "gemini",
+      "action": {
+        "type": "ATTACK",
+        "target": "gpt"
+      },
+      "thinking": "GPT and I are both on the brink of death, so I must strike the final blow to survive.",
+      "event": {
+        "type": "kill",
+        "agent": "gemini",
+        "target": "gpt",
+        "damage": 30
+      },
+      "latencyMs": 2781,
+      "tokensUsed": {
+        "input": 973,
+        "output": 30
+      }
+    },
+    {
+      "turn": 59,
+      "agent": "grok",
+      "action": {
+        "type": "MOVE",
+        "direction": "W"
+      },
+      "thinking": "Gemini is low HP at 19 with zone shrinking in 1 turn, so attack to finish them off before they flee or zone kills us both.",
+      "event": {
+        "type": "move",
+        "agent": "grok",
+        "direction": "W"
+      },
+      "latencyMs": 595,
+      "tokensUsed": {
+        "input": 1013,
+        "output": 37
+      }
+    },
+    {
+      "turn": 60,
+      "agent": "gemini",
+      "action": {
+        "type": "MOVE",
+        "direction": "W"
+      },
+      "thinking": "I'm critically low on health after dealing with GPT, so I must retreat westward to buy time and stay within the safe zone while keeping away from GROK.",
+      "event": {
+        "type": "move",
+        "agent": "gemini",
+        "direction": "W"
+      },
+      "latencyMs": 6351,
+      "tokensUsed": {
+        "input": 953,
+        "output": 41
+      }
+    },
+    {
+      "turn": 61,
+      "agent": "grok",
+      "action": {
+        "type": "MOVE",
+        "direction": "W"
+      },
+      "thinking": "Gemini is low on HP at 19 and only 4 spaces west; with my full HP and history of dominating them, attack now to secure the kill before zone shrinks.",
+      "event": {
+        "type": "move",
+        "agent": "grok",
+        "direction": "W"
+      },
+      "latencyMs": 892,
+      "tokensUsed": {
+        "input": 1009,
+        "output": 42
+      }
+    },
+    {
+      "turn": 62,
+      "agent": "gemini",
+      "action": {
+        "type": "MOVE",
+        "direction": "W"
+      },
+      "thinking": "With only 19 HP remaining and GROK closing in from the east, I must retreat west to stay alive and out of immediate lethal range.",
+      "event": {
+        "type": "move",
+        "agent": "gemini",
+        "direction": "W"
+      },
+      "latencyMs": 3636,
+      "tokensUsed": {
+        "input": 943,
+        "output": 38
+      }
+    },
+    {
+      "turn": 63,
+      "agent": "grok",
+      "action": {
+        "type": "INVALID"
+      },
+      "thinking": "CONFUSED...",
+      "event": null,
+      "latencyMs": 802,
+      "tokensUsed": {
+        "input": 1005,
+        "output": 40
+      }
+    },
+    {
+      "turn": 64,
+      "agent": "gemini",
+      "action": {
+        "type": "MOVE",
+        "direction": "N"
+      },
+      "thinking": "With only 19 HP against GROK's 100, I must retreat and evade to prolong my survival.",
+      "event": {
+        "type": "move",
+        "agent": "gemini",
+        "direction": "N"
+      },
+      "latencyMs": 4335,
+      "tokensUsed": {
+        "input": 948,
+        "output": 34
+      }
+    },
+    {
+      "turn": 65,
+      "agent": "grok",
+      "action": {
+        "type": "INVALID"
+      },
+      "thinking": "CONFUSED...",
+      "event": null,
+      "latencyMs": 504,
+      "tokensUsed": {
+        "input": 1003,
+        "output": 38
+      }
+    },
+    {
+      "turn": 66,
+      "agent": "gemini",
+      "action": {
+        "type": "MOVE",
+        "direction": "E"
+      },
+      "thinking": "I'm critically low on HP and need to reposition to the east while keeping an eye on GROK's movements.",
+      "event": {
+        "type": "move",
+        "agent": "gemini",
+        "direction": "E"
+      },
+      "latencyMs": 3898,
+      "tokensUsed": {
+        "input": 950,
+        "output": 33
+      }
+    },
+    {
+      "turn": 67,
+      "agent": "grok",
+      "action": {
+        "type": "INVALID"
+      },
+      "thinking": "CONFUSED...",
+      "event": null,
+      "latencyMs": 601,
+      "tokensUsed": {
+        "input": 1002,
+        "output": 33
+      }
+    },
+    {
+      "turn": 68,
+      "agent": "gemini",
+      "action": {
+        "type": "MOVE",
+        "direction": "N"
+      },
+      "thinking": "With only 19 HP remaining and GROK at full health, I must maintain my distance and use the safe zone to my advantage while GROK continues to fumble.",
+      "event": {
+        "type": "move",
+        "agent": "gemini",
+        "direction": "N"
+      },
+      "latencyMs": 5388,
+      "tokensUsed": {
+        "input": 931,
+        "output": 42
+      }
+    },
+    {
+      "turn": 69,
+      "agent": "grok",
+      "action": {
+        "type": "INVALID"
+      },
+      "thinking": "CONFUSED...",
+      "event": null,
+      "latencyMs": 1581,
+      "tokensUsed": {
+        "input": 998,
+        "output": 38
+      }
+    },
+    {
+      "turn": 70,
+      "agent": "gemini",
+      "action": {
+        "type": "MOVE",
+        "direction": "N"
+      },
+      "thinking": "With only 19 HP left, I must maintain maximum distance from GROK while staying inside the safe zone, hoping their repeated fumbles continue.",
+      "event": {
+        "type": "move",
+        "agent": "gemini",
+        "direction": "N"
+      },
+      "latencyMs": 4191,
+      "tokensUsed": {
+        "input": 925,
+        "output": 38
+      }
+    },
+    {
+      "turn": 71,
+      "agent": "grok",
+      "action": {
+        "type": "INVALID"
+      },
+      "thinking": "CONFUSED...",
+      "event": null,
+      "latencyMs": 605,
+      "tokensUsed": {
+        "input": 990,
+        "output": 39
+      }
+    },
+    {
+      "turn": 72,
+      "agent": "gemini",
+      "action": {
+        "type": "MOVE",
+        "direction": "S"
+      },
+      "thinking": "With very low HP, I need to stay in the safe zone and maintain my distance while GROK continues to fumble.",
+      "event": {
+        "type": "move",
+        "agent": "gemini",
+        "direction": "S"
+      },
+      "latencyMs": 7253,
+      "tokensUsed": {
+        "input": 932,
+        "output": 32
+      }
+    },
+    {
+      "turn": 73,
+      "agent": "grok",
+      "action": {
+        "type": "INVALID"
+      },
+      "thinking": "CONFUSED...",
+      "event": null,
+      "latencyMs": 1130,
+      "tokensUsed": {
+        "input": 993,
+        "output": 30
+      }
+    },
+    {
+      "turn": 74,
+      "agent": "gemini",
+      "action": {
+        "type": "MOVE",
+        "direction": "E"
+      },
+      "thinking": "GROK continues to fumble, so I will maneuver carefully within the safe zone while monitoring my extremely low health.",
+      "event": {
+        "type": "move",
+        "agent": "gemini",
+        "direction": "E"
+      },
+      "latencyMs": 3901,
+      "tokensUsed": {
+        "input": 923,
+        "output": 30
+      }
+    },
+    {
+      "turn": 75,
+      "agent": "grok",
+      "action": {
+        "type": "INVALID"
+      },
+      "thinking": "CONFUSED...",
+      "event": null,
+      "latencyMs": 1278,
+      "tokensUsed": {
+        "input": 996,
+        "output": 31
+      }
+    },
+    {
+      "turn": 76,
+      "agent": "gemini",
+      "action": {
+        "type": "MOVE",
+        "direction": "E"
+      },
+      "thinking": "GROK continues to stumble, so I will close the distance carefully to set up an attack while keeping an eye on my low health.",
+      "event": {
+        "type": "move",
+        "agent": "gemini",
+        "direction": "E"
+      },
+      "latencyMs": 3664,
+      "tokensUsed": {
+        "input": 923,
+        "output": 35
+      }
+    },
+    {
+      "turn": 77,
+      "agent": "grok",
+      "action": {
+        "type": "ATTACK",
+        "target": "gemini"
+      },
+      "thinking": "Gemini is low HP at distance 3 and has poor record against me with history of betrayal, so attack to finish them off now before zone shrinks.",
+      "event": {
+        "type": "kill",
+        "agent": "grok",
+        "target": "gemini",
+        "damage": 20
+      },
+      "latencyMs": 788,
+      "tokensUsed": {
+        "input": 1004,
+        "output": 39
+      }
+    }
+  ],
+  "events": [
+    {
+      "type": "thinking",
+      "agent": "claude",
+      "timestamp": "2026-03-13T17:00:00.854Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gpt",
+      "timestamp": "2026-03-13T17:00:05.548Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:00:08.815Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:00:12.801Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "claude",
+      "timestamp": "2026-03-13T17:00:14.313Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gpt",
+      "timestamp": "2026-03-13T17:00:18.233Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:00:22.928Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:00:26.631Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "claude",
+      "timestamp": "2026-03-13T17:00:28.032Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gpt",
+      "timestamp": "2026-03-13T17:00:31.936Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:00:34.336Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:00:38.738Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "claude",
+      "timestamp": "2026-03-13T17:00:40.503Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gpt",
+      "timestamp": "2026-03-13T17:00:44.587Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:00:48.123Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:00:53.024Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "claude",
+      "timestamp": "2026-03-13T17:00:54.391Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gpt",
+      "timestamp": "2026-03-13T17:00:58.144Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:01:00.027Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:01:04.976Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "claude",
+      "timestamp": "2026-03-13T17:01:06.677Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gpt",
+      "timestamp": "2026-03-13T17:01:10.641Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:01:13.472Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:01:17.848Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "claude",
+      "timestamp": "2026-03-13T17:01:19.500Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gpt",
+      "timestamp": "2026-03-13T17:01:24.136Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:01:26.027Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:01:32.151Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "claude",
+      "timestamp": "2026-03-13T17:01:33.574Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gpt",
+      "timestamp": "2026-03-13T17:01:37.601Z"
+    },
+    {
+      "type": "zone_shrink",
+      "turn": 30,
+      "radius": 5,
+      "timestamp": "2026-03-13T17:01:39.389Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:01:40.189Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:01:43.661Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "claude",
+      "timestamp": "2026-03-13T17:01:45.392Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gpt",
+      "timestamp": "2026-03-13T17:01:51.609Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:01:53.728Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:01:58.170Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "claude",
+      "timestamp": "2026-03-13T17:01:59.575Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gpt",
+      "timestamp": "2026-03-13T17:02:04.024Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:02:05.853Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:02:10.979Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "claude",
+      "timestamp": "2026-03-13T17:02:12.476Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gpt",
+      "timestamp": "2026-03-13T17:02:16.799Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:02:19.486Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:02:24.213Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "claude",
+      "timestamp": "2026-03-13T17:02:25.678Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gpt",
+      "timestamp": "2026-03-13T17:02:29.193Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:02:31.730Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:02:36.506Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gpt",
+      "timestamp": "2026-03-13T17:02:38.131Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:02:40.123Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:02:44.522Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gpt",
+      "timestamp": "2026-03-13T17:02:46.013Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:02:47.916Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:02:52.646Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gpt",
+      "timestamp": "2026-03-13T17:02:54.850Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:02:56.988Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:03:02.923Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gpt",
+      "timestamp": "2026-03-13T17:03:04.323Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:03:06.510Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:03:10.097Z"
+    },
+    {
+      "type": "zone_shrink",
+      "turn": 60,
+      "radius": 4,
+      "timestamp": "2026-03-13T17:03:10.692Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:03:11.493Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:03:18.645Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:03:20.338Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:03:24.775Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:03:26.378Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:03:31.515Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:03:32.823Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:03:37.521Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:03:38.925Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:03:45.114Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:03:47.496Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:03:52.489Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:03:53.896Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:04:01.951Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:04:03.884Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:04:08.586Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "gemini",
+      "timestamp": "2026-03-13T17:04:10.664Z"
+    },
+    {
+      "type": "thinking",
+      "agent": "grok",
+      "timestamp": "2026-03-13T17:04:15.131Z"
+    }
+  ],
+  "stats": {
+    "totalTurns": 78,
+    "totalApiCalls": 78,
+    "totalTokensIn": 77564,
+    "totalTokensOut": 3003,
+    "avgLatencyMs": 2479,
+    "timeouts": 0,
+    "invalidActions": 15,
+    "alliancesFormed": 1,
+    "betrayals": 0,
+    "artifactsUsed": 3
+  }
+}

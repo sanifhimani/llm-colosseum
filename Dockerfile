@@ -1,18 +1,21 @@
+FROM node:22-alpine AS frontend
+
+WORKDIR /app
+COPY package.json bun.lock ./
+RUN npm install
+COPY index.html vite.config.js tailwind.config.* postcss.config.* ./
+COPY src/ src/
+COPY public/ public/
+RUN npx vite build
+
 FROM oven/bun:1-alpine
 
 RUN apk add --no-cache git
 
 WORKDIR /app
 
-# Install and build frontend
-COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile
-COPY index.html vite.config.js tailwind.config.* postcss.config.* ./
-COPY src/ src/
-COPY public/ public/
-RUN bun run build
+COPY --from=frontend /app/dist dist/
 
-# Install engine deps
 COPY engine/package.json engine/bun.lock engine/
 RUN cd engine && bun install --frozen-lockfile --production
 

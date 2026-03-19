@@ -1,7 +1,9 @@
 import { resolve } from 'path';
+import { existsSync } from 'fs';
 
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import { serveStatic } from 'hono/bun';
 
 import { loadSeasonMeta } from './game/state.js';
 import { createAgentsFromRoster } from './agents/factory.js';
@@ -24,6 +26,12 @@ app.use('*', cors({
   origin: ['https://llmcolosseum.dev', 'http://localhost:5173'],
 }));
 app.route('/api', createDataRoutes(DATA_DIR));
+
+const DIST_DIR = resolve(DATA_DIR, '..', 'dist');
+if (existsSync(DIST_DIR)) {
+  app.use('/*', serveStatic({ root: '../dist' }));
+  app.get('*', serveStatic({ root: '../dist', path: '/index.html' }));
+}
 
 const viewers = new Set();
 let activeBattle = null;

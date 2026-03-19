@@ -1,0 +1,50 @@
+service: llm-colosseum
+
+image: sanifhimani/llm-colosseum
+
+servers:
+  web:
+    hosts:
+      - 178.156.235.62
+    options:
+      memory: 256m
+      cpus: "0.25"
+
+proxy:
+  ssl: false
+  host: llmcolosseum.dev
+  app_port: 8080
+  healthcheck:
+    path: /health
+
+registry:
+  server: ghcr.io
+  username: sanifhimani
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+env:
+  clear:
+    PORT: "8080"
+    DATA_DIR: ../data
+    GIT_AUTO_PUSH: "true"
+    GITHUB_REPO: sanifhimani/llm-colosseum
+    USE_MOCK: "false"
+    BATTLE_BUDGET_CAP: "1.50"
+  secret:
+    - ANTHROPIC_API_KEY
+    - OPENAI_API_KEY
+    - GOOGLE_AI_API_KEY
+    - XAI_API_KEY
+    - ADMIN_TOKEN
+    - GITHUB_TOKEN
+
+builder:
+  arch: amd64
+
+ssh:
+  user: root
+
+aliases:
+  logs: app logs -f
+  shell: app exec --interactive --reuse "sh"

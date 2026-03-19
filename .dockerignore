@@ -1,5 +1,13 @@
 *
 !engine/
 !data/
+!src/
+!public/
+!package.json
+!bun.lock
+!index.html
+!vite.config.js
+!tailwind.config.*
+!postcss.config.*
 engine/node_modules
 engine/.env

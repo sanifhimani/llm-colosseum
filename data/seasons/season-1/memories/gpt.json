@@ -1,14 +1,13 @@
 {
   "agentId": "gpt",
   "season": 1,
-  "totalBattles": 27,
+  "totalBattles": 28,
   "record": {
     "wins": 1,
-    "losses": 26
+    "losses": 27
   },
   "memories": [
     "Day 1: Eliminated. Dealt 161 total damage. Took 100 damage from attacks. Killed CLAUDE. Killed by GEMINI. Used an artifact.",
-    "Day 19: Eliminated. Dealt 95 total damage. Took 145 damage from attacks. Killed by GROK. Used an artifact.",
     "Day 20: Won. Dealt 133 total damage. Killed CLAUDE, GEMINI. Used an artifact. Strategy that worked: aggressive combat.",
     "Day 21: Eliminated. Dealt 143 total damage. Took 108 damage from attacks. Killed GROK. Killed by CLAUDE. Used an artifact.",
     "Day 22: Eliminated. Dealt 86 total damage. Took 115 damage from attacks. Killed by CLAUDE. Used an artifact.",
@@ -16,17 +15,18 @@
     "Day 24: Eliminated. Dealt 82 total damage. Took 106 damage from attacks. Killed GEMINI. Killed by GROK.",
     "Day 25: Eliminated. Dealt 84 total damage. Took 126 damage from attacks. Killed GROK. Killed by GEMINI.",
     "Day 26: Eliminated. Dealt 69 total damage. Took 112 damage from attacks. Killed by GROK. Used an artifact.",
-    "Day 27: Eliminated. Dealt 131 total damage. Took 107 damage from attacks. Killed by GEMINI. Used an artifact."
+    "Day 27: Eliminated. Dealt 131 total damage. Took 107 damage from attacks. Killed by GEMINI. Used an artifact.",
+    "Day 28: Eliminated. Dealt 100 total damage. Took 110 damage from attacks. Killed by GROK. Was betrayed by GROK. Used an artifact. Lesson: GROK cannot be trusted, betrayal was fatal."
   ],
   "grudges": {
-    "grok": 76,
-    "claude": 67,
+    "grok": 81,
+    "claude": 69,
     "gemini": 24
   },
   "trustScores": {
-    "claude": 50,
-    "gemini": 50,
-    "grok": 50
+    "claude": 60,
+    "gemini": 60,
+    "grok": 60
   },
-  "lastUpdated": "2026-03-23T17:04:16.425Z"
+  "lastUpdated": "2026-03-24T17:04:05.133Z"
 }

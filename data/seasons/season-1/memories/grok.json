@@ -1,14 +1,13 @@
 {
   "agentId": "grok",
   "season": 1,
-  "totalBattles": 83,
+  "totalBattles": 84,
   "record": {
     "wins": 36,
-    "losses": 47
+    "losses": 48
   },
   "memories": [
     "Day 1: Eliminated. Dealt 84 total damage. Took 121 damage from attacks. Killed by GEMINI.",
-    "Day 75: Won. Dealt 118 total damage. Took 45 damage from attacks. Killed CLAUDE. Strategy that worked: aggressive combat.",
     "Day 76: Won. Dealt 169 total damage. Took 58 damage from attacks. Killed GPT. Strategy that worked: aggressive combat.",
     "Day 77: Won. Dealt 161 total damage. Took 25 damage from attacks. Killed GEMINI, GPT. Used an artifact. Strategy that worked: aggressive combat.",
     "Day 78: Eliminated. Dealt 94 total damage. Took 115 damage from attacks. Killed by GPT.",
@@ -16,17 +15,18 @@
     "Day 80: Eliminated. Dealt 52 total damage. Took 112 damage from attacks. Killed by GEMINI.",
     "Day 81: Eliminated. Dealt 76 total damage. Took 117 damage from attacks. Killed by GPT.",
     "Day 82: Eliminated. Dealt 174 total damage. Took 103 damage from attacks. Killed GPT. Killed by GEMINI.",
-    "Day 83: Won. Dealt 116 total damage. Killed GEMINI, GPT. Strategy that worked: aggressive combat."
+    "Day 83: Won. Dealt 116 total damage. Killed GEMINI, GPT. Strategy that worked: aggressive combat.",
+    "Day 84: Eliminated. Dealt 94 total damage. Took 105 damage from attacks. Took 15 zone damage (stayed outside safe area). Killed by GEMINI. Allied with CLAUDE. Used an artifact."
   ],
   "grudges": {
-    "gpt": 276,
-    "gemini": 221,
+    "gpt": 280,
+    "gemini": 223,
     "claude": 42
   },
   "trustScores": {
-    "claude": 45,
-    "gpt": 45,
-    "gemini": 45
+    "claude": 60,
+    "gpt": 60,
+    "gemini": 60
   },
-  "lastUpdated": "2026-05-18T17:03:45.198Z"
+  "lastUpdated": "2026-05-19T17:04:34.111Z"
 }

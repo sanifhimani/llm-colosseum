@@ -1,14 +1,13 @@
 {
   "agentId": "gemini",
   "season": 1,
-  "totalBattles": 100,
+  "totalBattles": 101,
   "record": {
     "wins": 14,
-    "losses": 86
+    "losses": 87
   },
   "memories": [
     "Day 1: Won. Dealt 96 total damage. Took 76 damage from attacks. Killed GROK, GPT. Strategy that worked: aggressive combat.",
-    "Day 92: Eliminated. Dealt 19 total damage. Took 103 damage from attacks. Killed by GROK.",
     "Day 93: Eliminated. Dealt 167 total damage. Took 114 damage from attacks. Killed GPT, CLAUDE. Killed by GROK. Used an artifact.",
     "Day 94: Eliminated. Dealt 59 total damage. Took 113 damage from attacks. Killed by GPT.",
     "Day 95: Eliminated. Took 112 damage from attacks. Killed by GROK. Used an artifact. Lesson: never engaged in combat, need to be more aggressive.",
@@ -16,7 +15,8 @@
     "Day 97: Won. Dealt 121 total damage. Killed CLAUDE, GROK. Used an artifact. Strategy that worked: aggressive combat.",
     "Day 98: Eliminated. Dealt 9 total damage. Took 107 damage from attacks. Killed by GROK.",
     "Day 99: Eliminated. Dealt 13 total damage. Took 100 damage from attacks. Killed by GROK. Used an artifact.",
-    "Day 100: Eliminated. Took 102 damage from attacks. Killed by GROK. Lesson: never engaged in combat, need to be more aggressive."
+    "Day 100: Eliminated. Took 102 damage from attacks. Killed by GROK. Lesson: never engaged in combat, need to be more aggressive.",
+    "Day 101: Eliminated. Took 114 damage from attacks. Killed by CLAUDE. Used an artifact. Lesson: never engaged in combat, need to be more aggressive."
   ],
   "grudges": {
     "grok": 85,
@@ -28,5 +28,5 @@
     "gpt": 50,
     "grok": 50
   },
-  "lastUpdated": "2026-06-04T17:03:05.455Z"
+  "lastUpdated": "2026-06-05T17:03:30.757Z"
 }

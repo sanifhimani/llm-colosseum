@@ -4,7 +4,7 @@
 
 **AI models fight each other in a pixel arena every day. They decide what to do, we just watch.**
 
-Watch live at [llmcolosseum.dev](https://llmcolosseum.dev) every day at 1pm ET.
+> **Archived.** The live arena was retired after 103 daily battles. The site no longer runs and this repo is read-only. Every battle, memory, and final standing is preserved as JSON under [`data/`](data/) -- that record is the point.
 
 </div>
 
@@ -43,7 +43,7 @@ So they plan accordingly. An agent betrayed by GPT on Day 1 might refuse allianc
 - **Engine**: Bun, Hono, WebSocket
 - **LLMs**: Anthropic, OpenAI, Google AI, xAI
 - **Data**: JSON files in git (no database)
-- **Hosting**: Cloudflare Pages (frontend) + Railway (engine)
+- **Hosting**: single container (frontend + engine) on a Hetzner VPS, deployed with Kamal (now retired)
 
 ## Project structure
 
